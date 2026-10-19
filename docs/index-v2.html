@@ -1,0 +1,564 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>企业知识库 · 基础样式规范</title>
+  <style>
+    /*
+     * 基础样式预览：对应 docs/企业知识库系统UI设计.md 第 2 章。
+     * 色彩 Seed 与规范一致。这里的派生 Token 仅用于静态预览；
+     * Vue 应用须使用 Ant Design Vue ConfigProvider theme 与 theme.useToken()。
+     */
+    :root {
+      color-scheme: light;
+      --seed-primary: #16A34A;
+      --seed-success: #059669;
+      --seed-warning: #F59E0B;
+      --seed-error: #EF4444;
+      --seed-info: #4E95FF;
+      --seed-text-base: #1F1F1F;
+      --seed-bg-base: #FFFFFF;
+
+      --color-primary: var(--seed-primary);
+      --color-primary-hover: #15803D;
+      --color-primary-active: #166534;
+      --color-primary-bg: #DCFCE7;
+      --color-primary-border: #86EFAC;
+      --color-success: var(--seed-success);
+      --color-success-bg: #D1FAE5;
+      --color-success-text: #047857;
+      --color-warning: var(--seed-warning);
+      --color-warning-bg: #FEF3C7;
+      --color-warning-text: #B45309;
+      --color-error: var(--seed-error);
+      --color-error-bg: #FEE2E2;
+      --color-error-text: #B91C1C;
+      --color-info: var(--seed-info);
+      --color-info-bg: #EBF2FA;
+      --color-info-text: #46688F;
+
+      --bg-layout: #F5F5F5;
+      --bg-container: var(--seed-bg-base);
+      --bg-elevated: var(--seed-bg-base);
+      --bg-muted: #F5F5F5;
+      --text-primary: rgba(0, 0, 0, .88);
+      --text-secondary: rgba(0, 0, 0, .65);
+      --text-tertiary: rgba(0, 0, 0, .45);
+      --text-disabled: rgba(0, 0, 0, .25);
+      --icon-default: rgba(0, 0, 0, .45);
+      --border: #D9D9D9;
+      --border-split: #F0F0F0;
+      --fill-hover: rgba(0, 0, 0, .04);
+      --fill-subtle: rgba(0, 0, 0, .02);
+      --focus-ring: rgba(22, 163, 74, .22);
+      --mask: rgba(0, 0, 0, .45);
+      --white: #FFFFFF;
+
+      --font-sans: "MiSans", "MiSans L3", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      --font-mono: "Fira Code", "SF Mono", Menlo, Consolas, "Courier New", monospace;
+      --font-size-xs: 12px;
+      --font-size-sm: 13px;
+      --font-size-body: 14px;
+      --font-size-reading: 16px;
+      --font-size-h4: 16px;
+      --font-size-h3: 18px;
+      --font-size-h2: 22px;
+      --font-size-h1: 28px;
+      --line-height-body: 1.5;
+      --line-height-reading: 1.8;
+      --weight-regular: 400;
+      --weight-medium: 500;
+      --weight-semibold: 600;
+
+      --space-1: 4px;
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-6: 24px;
+      --space-8: 32px;
+      --space-12: 48px;
+      --radius-sm: 4px;
+      --radius-md: 6px;
+      --radius-lg: 8px;
+      --radius-xl: 12px;
+      --radius-pill: 9999px;
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, .06), 0 1px 3px rgba(0, 0, 0, .08);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, .10);
+      --shadow-lg: 0 12px 28px rgba(0, 0, 0, .16);
+      --ease-standard: cubic-bezier(.2, 0, 0, 1);
+      --duration-fast: 150ms;
+      --duration-standard: 200ms;
+
+      --page: #F5F5F5;
+      --surface: #FFFFFF;
+      --surface-raised: #FFFFFF;
+      --sidebar: #FFFFFF;
+      --code-bg: #F5F5F5;
+    }
+
+    html[data-theme="dark"] {
+      color-scheme: dark;
+      --color-primary-hover: #166534;
+      --color-primary-active: #14532D;
+      --color-primary-bg: #14532D;
+      --color-primary-border: #166534;
+      --color-success-bg: #064E3B;
+      --color-success-text: #34D399;
+      --color-warning-bg: #78350F;
+      --color-warning-text: #FBBF24;
+      --color-error-bg: #7F1D1D;
+      --color-error-text: #F87171;
+      --color-info-bg: #233A56;
+      --color-info-text: #A6BCD9;
+      --bg-layout: #000000;
+      --bg-container: #141414;
+      --bg-elevated: #1F1F1F;
+      --bg-muted: #1F1F1F;
+      --text-primary: rgba(255, 255, 255, .85);
+      --text-secondary: rgba(255, 255, 255, .65);
+      --text-tertiary: rgba(255, 255, 255, .45);
+      --text-disabled: rgba(255, 255, 255, .25);
+      --icon-default: rgba(255, 255, 255, .45);
+      --border: #424242;
+      --border-split: #303030;
+      --fill-hover: rgba(255, 255, 255, .08);
+      --fill-subtle: rgba(255, 255, 255, .04);
+      --focus-ring: rgba(22, 163, 74, .34);
+      --mask: rgba(0, 0, 0, .65);
+      --page: #000000;
+      --surface: #141414;
+      --surface-raised: #1F1F1F;
+      --sidebar: #141414;
+      --code-bg: #1F1F1F;
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, .3), 0 1px 3px rgba(0, 0, 0, .25);
+      --shadow-md: 0 6px 16px rgba(0, 0, 0, .35);
+      --shadow-lg: 0 16px 36px rgba(0, 0, 0, .48);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 88px; }
+    body {
+      margin: 0;
+      background: var(--page);
+      color: var(--text-primary);
+      font: var(--weight-regular) var(--font-size-body)/var(--line-height-body) var(--font-sans);
+      transition: background-color var(--duration-standard) var(--ease-standard), color var(--duration-standard) var(--ease-standard);
+    }
+    button, input, select { font: inherit; }
+    button { color: inherit; }
+    a { color: var(--color-primary); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    code, .mono { font-family: var(--font-mono); }
+    :focus-visible { outline: 3px solid var(--focus-ring); outline-offset: 2px; }
+
+    .topbar {
+      position: sticky; top: 0; z-index: 10;
+      display: flex; align-items: center; justify-content: space-between; gap: var(--space-4);
+      min-height: 64px; padding: 0 clamp(20px, 4vw, 56px);
+      background: color-mix(in srgb, var(--surface) 92%, transparent);
+      border-bottom: 1px solid var(--border-split); backdrop-filter: blur(12px);
+    }
+    .brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+    .brand-mark { display: grid; place-items: center; width: 32px; height: 32px; border-radius: var(--radius-md); background: var(--color-primary); color: var(--white); }
+    .brand-name { font-weight: var(--weight-semibold); letter-spacing: .01em; }
+    .brand-subtitle { color: var(--text-tertiary); font-size: var(--font-size-sm); }
+    .top-actions { display: flex; align-items: center; gap: var(--space-2); }
+    .theme-button, .icon-button {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      min-height: 36px; padding: 0 12px; border: 1px solid var(--border); border-radius: var(--radius-md);
+      background: var(--surface); color: var(--text-secondary); cursor: pointer;
+      transition: background var(--duration-fast) var(--ease-standard), border-color var(--duration-fast) var(--ease-standard), color var(--duration-fast) var(--ease-standard);
+    }
+    .theme-button:hover, .icon-button:hover { background: var(--fill-hover); color: var(--text-primary); border-color: var(--border); }
+
+    .layout { display: grid; grid-template-columns: 224px minmax(0, 1fr); max-width: 1560px; margin: auto; min-height: calc(100vh - 64px); }
+    .toc { position: sticky; top: 64px; align-self: start; height: calc(100vh - 64px); overflow: auto; padding: 32px 20px 40px 28px; border-right: 1px solid var(--border-split); background: var(--sidebar); }
+    .toc-title { margin: 0 0 16px; color: var(--text-tertiary); font-size: 11px; font-weight: var(--weight-semibold); letter-spacing: .12em; text-transform: uppercase; }
+    .toc a { display: flex; align-items: center; gap: 10px; min-height: 38px; padding: 7px 10px; border-radius: var(--radius-md); color: var(--text-secondary); font-size: var(--font-size-sm); }
+    .toc a:hover { background: var(--fill-hover); color: var(--text-primary); text-decoration: none; }
+    .toc .toc-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border); }
+    main { min-width: 0; padding: 48px clamp(20px, 5vw, 72px) 88px; }
+    .hero { max-width: 920px; margin: 0 auto 40px; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 8px; color: var(--color-primary); font-size: var(--font-size-sm); font-weight: var(--weight-semibold); }
+    .eyebrow::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+    h1 { margin: 12px 0 12px; font-size: clamp(30px, 4vw, 42px); line-height: 1.2; letter-spacing: -.035em; font-weight: var(--weight-semibold); }
+    .hero-copy { max-width: 720px; margin: 0; color: var(--text-secondary); font-size: var(--font-size-reading); line-height: 1.7; }
+    .hero-note { display: flex; align-items: flex-start; gap: 10px; max-width: 880px; margin-top: 22px; padding: 14px 16px; border: 1px solid var(--color-info-bg); border-radius: var(--radius-md); background: color-mix(in srgb, var(--color-info-bg) 46%, var(--surface)); color: var(--text-secondary); font-size: var(--font-size-sm); }
+    .hero-note svg { flex: 0 0 auto; color: var(--color-info); margin-top: 1px; }
+    .content { max-width: 920px; margin: 0 auto; }
+    .section { margin-top: 52px; scroll-margin-top: 88px; }
+    .section-head { display: flex; align-items: end; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
+    .section-kicker { margin: 0 0 5px; color: var(--text-tertiary); font-size: 11px; font-weight: var(--weight-semibold); letter-spacing: .1em; text-transform: uppercase; }
+    h2 { margin: 0; font-size: var(--font-size-h2); line-height: 1.35; font-weight: var(--weight-semibold); }
+    h3 { margin: 0; font-size: var(--font-size-h3); line-height: 1.4; font-weight: var(--weight-semibold); }
+    .section-description { max-width: 600px; margin: 8px 0 0; color: var(--text-tertiary); font-size: var(--font-size-sm); }
+    .section-index { color: var(--text-tertiary); font: 500 12px/1 var(--font-mono); }
+    .panel { border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); box-shadow: var(--shadow-sm); }
+    .panel-pad { padding: 22px; }
+    .subhead { margin: 0 0 14px; font-size: var(--font-size-sm); font-weight: var(--weight-semibold); }
+    .muted { color: var(--text-tertiary); }
+    .small { font-size: var(--font-size-sm); }
+    .caption { color: var(--text-tertiary); font-size: var(--font-size-xs); }
+    .grid { display: grid; gap: 14px; }
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .grid-5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+
+    .seed-card { overflow: hidden; border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--surface); }
+    .swatch { height: 94px; background: var(--swatch); }
+    .seed-meta { padding: 12px; }
+    .seed-label { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: var(--font-size-sm); font-weight: var(--weight-semibold); }
+    .seed-meta code { display: block; margin-top: 5px; color: var(--text-tertiary); font-size: 11px; }
+    .seed-meta p { margin: 8px 0 0; color: var(--text-tertiary); font-size: 11px; }
+    .seed-mark { width: 7px; height: 7px; border-radius: 50%; background: var(--swatch); }
+    .token-strip { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+    .token-chip { overflow: hidden; border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--surface); }
+    .token-chip-color { min-height: 54px; background: var(--chip); }
+    .token-chip-body { padding: 9px 10px 10px; }
+    .token-chip-body strong { display: block; font-size: 12px; font-weight: var(--weight-medium); }
+    .token-chip-body code { color: var(--text-tertiary); font-size: 10px; }
+    .semantic-row { display: grid; grid-template-columns: 96px minmax(0, 1fr) 176px; align-items: center; gap: 14px; padding: 13px 0; border-bottom: 1px solid var(--border-split); }
+    .semantic-row:last-child { border-bottom: 0; }
+    .semantic-name { display: flex; align-items: center; gap: 8px; font-size: var(--font-size-sm); font-weight: var(--weight-medium); }
+    .semantic-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--tone); }
+    .semantic-preview { display: flex; overflow: hidden; min-height: 40px; border: 1px solid color-mix(in srgb, var(--tone) 28%, var(--border)); border-radius: var(--radius-md); background: var(--tone-bg); color: var(--tone-text); font-size: 12px; font-weight: var(--weight-medium); }
+    .semantic-preview > span { display: flex; align-items: center; gap: 7px; padding: 0 11px; }
+    .semantic-preview svg { color: var(--tone); }
+    .semantic-codes { display: grid; gap: 3px; color: var(--text-tertiary); font: 10px/1.4 var(--font-mono); }
+
+    .type-row { display: grid; grid-template-columns: 110px minmax(0, 1fr) 170px; align-items: baseline; gap: 18px; padding: 16px 0; border-bottom: 1px solid var(--border-split); }
+    .type-row:last-child { border-bottom: 0; }
+    .type-label { color: var(--text-tertiary); font-size: 12px; }
+    .type-sample { min-width: 0; }
+    .type-spec { text-align: right; color: var(--text-tertiary); font: 11px/1.5 var(--font-mono); }
+    .type-h1 { font-size: 28px; font-weight: 600; line-height: 1.3; }
+    .type-h2 { font-size: 22px; font-weight: 600; line-height: 1.35; }
+    .type-h3 { font-size: 18px; font-weight: 600; line-height: 1.4; }
+    .type-h4 { font-size: 16px; font-weight: 600; line-height: 1.5; }
+    .type-body { font-size: 14px; line-height: 1.5; }
+    .type-aux { color: var(--text-secondary); font-size: 13px; line-height: 1.5; }
+    .type-caption { color: var(--text-tertiary); font-size: 12px; line-height: 1.5; }
+    .reading-sample { padding: 18px; border-radius: var(--radius-md); background: var(--bg-muted); }
+    .reading-sample h3 { margin-bottom: 8px; }
+    .reading-sample p { margin: 0; color: var(--text-secondary); font-size: 16px; line-height: 1.8; }
+    .font-stack { display: grid; gap: 10px; }
+    .font-stack code { display: block; overflow-wrap: anywhere; padding: 10px 12px; border-radius: var(--radius-sm); background: var(--code-bg); color: var(--text-secondary); font-size: 11px; }
+
+    .space-list { display: grid; gap: 17px; }
+    .space-item { display: grid; grid-template-columns: 60px minmax(80px, 1fr) 44px 110px; align-items: center; gap: 14px; }
+    .space-name { color: var(--text-secondary); font-size: var(--font-size-sm); }
+    .space-bar-wrap { height: 22px; }
+    .space-bar { height: 100%; min-width: 4px; border-radius: 3px; background: var(--color-primary); opacity: .82; }
+    .space-value { text-align: right; font: 12px var(--font-mono); }
+    .space-use { color: var(--text-tertiary); font-size: 11px; }
+
+    .shape-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; }
+    .shape-item { display: grid; justify-items: center; gap: 10px; padding: 15px 8px; border: 1px solid var(--border-split); border-radius: var(--radius-md); }
+    .shape-box { width: 74px; height: 52px; border: 1px solid var(--color-primary-border); background: var(--color-primary-bg); }
+    .shape-label { text-align: center; color: var(--text-secondary); font-size: 11px; }
+    .shape-label code { display: block; margin-top: 3px; color: var(--text-tertiary); font-size: 10px; }
+    .shadow-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+    .shadow-sample { display: grid; place-items: center; min-height: 96px; border: 1px solid var(--border-split); border-radius: var(--radius-lg); background: var(--surface); font-size: var(--font-size-sm); }
+    .shadow-sample small { color: var(--text-tertiary); font-size: 11px; }
+
+    .button-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 36px; padding: 0 14px; border: 1px solid transparent; border-radius: var(--radius-md); cursor: pointer; font-size: var(--font-size-body); font-weight: var(--weight-medium); transition: background-color var(--duration-fast) var(--ease-standard), border-color var(--duration-fast) var(--ease-standard), color var(--duration-fast) var(--ease-standard), box-shadow var(--duration-fast) var(--ease-standard); }
+    .btn-primary { background: var(--color-primary); color: var(--white); }
+    .btn-primary:hover { background: var(--color-primary-hover); }
+    .btn-default { border-color: var(--border); background: var(--surface); color: var(--text-secondary); }
+    .btn-default:hover { background: var(--fill-hover); color: var(--text-primary); }
+    .btn-text { background: transparent; color: var(--color-primary); }
+    .btn-text:hover { background: var(--color-primary-bg); }
+    .btn-danger { background: var(--color-error); color: var(--white); }
+    .btn-danger:hover { filter: brightness(.94); }
+    .btn:disabled { cursor: not-allowed; opacity: .5; }
+    .btn-icon { width: 36px; padding: 0; }
+    .control-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; }
+    .field { display: grid; gap: 7px; }
+    .field label { color: var(--text-secondary); font-size: var(--font-size-sm); font-weight: var(--weight-medium); }
+    .input, .select { width: 100%; min-height: 38px; padding: 0 11px; border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--surface); color: var(--text-primary); outline: none; }
+    .input::placeholder { color: var(--text-tertiary); }
+    .input:hover, .select:hover { border-color: var(--color-primary); }
+    .input:focus, .select:focus { border-color: var(--color-primary); box-shadow: 0 0 0 3px var(--focus-ring); }
+    .input-focus-preview { border-color: var(--color-primary); box-shadow: 0 0 0 3px var(--focus-ring); }
+    .input:disabled { background: var(--bg-muted); color: var(--text-disabled); cursor: not-allowed; }
+    .input-error { border-color: var(--color-error); }
+    .field-help { color: var(--text-tertiary); font-size: 11px; }
+    .field-error { color: var(--color-error-text); font-size: 11px; }
+    .tag-row { display: flex; flex-wrap: wrap; gap: 9px; }
+    .tag { display: inline-flex; align-items: center; gap: 6px; min-height: 26px; padding: 0 9px; border-radius: var(--radius-sm); font-size: 12px; font-weight: var(--weight-medium); }
+    .tag-success { background: var(--color-success-bg); color: var(--color-success-text); }
+    .tag-warning { background: var(--color-warning-bg); color: var(--color-warning-text); }
+    .tag-error { background: var(--color-error-bg); color: var(--color-error-text); }
+    .tag-info { background: var(--color-info-bg); color: var(--color-info-text); }
+    .tag-neutral { background: var(--bg-muted); color: var(--text-secondary); }
+    .sample-card { padding: 18px; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); }
+    .sample-card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+    .sample-card p { margin: 8px 0 0; color: var(--text-secondary); font-size: var(--font-size-sm); }
+    .sample-card-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 18px; padding-top: 13px; border-top: 1px solid var(--border-split); color: var(--text-tertiary); font-size: 11px; }
+
+    .icon-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; }
+    .icon-cell { display: grid; place-items: center; gap: 8px; min-height: 82px; border: 1px solid var(--border-split); border-radius: var(--radius-md); color: var(--icon-default); }
+    .icon-cell:hover { background: var(--fill-hover); color: var(--color-primary); }
+    .icon-cell span { color: var(--text-tertiary); font-size: 10px; }
+    .icon-12 { width: 12px; height: 12px; }
+    .icon-16 { width: 16px; height: 16px; }
+    .icon-20 { width: 20px; height: 20px; }
+    .icon-24 { width: 24px; height: 24px; }
+    .icon-32 { width: 32px; height: 32px; }
+    .icon-stroke { fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+    .icon-size-row { display: flex; align-items: end; gap: 24px; padding: 14px 0 2px; color: var(--icon-default); }
+
+    .motion-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    .motion-demo { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 14px; border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--surface); }
+    .motion-demo span { color: var(--text-secondary); font-size: 12px; }
+    .motion-dot { width: 22px; height: 22px; border-radius: 50%; background: var(--color-primary); transition: transform var(--duration-standard) var(--ease-standard); }
+    .motion-demo:hover .motion-dot { transform: translateX(-20px); }
+    .motion-demo:nth-child(2) .motion-dot { border-radius: var(--radius-sm); }
+    .motion-demo:nth-child(2):hover .motion-dot { transform: scale(1.18); }
+    .motion-demo:nth-child(3) .motion-dot { opacity: .75; }
+    .motion-demo:nth-child(3):hover .motion-dot { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+    .footer-note { margin-top: 54px; padding-top: 20px; border-top: 1px solid var(--border-split); color: var(--text-tertiary); font-size: 11px; }
+    .footer-note code { color: var(--text-secondary); }
+
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      .toc { position: static; display: flex; gap: 4px; height: auto; overflow-x: auto; padding: 10px 18px; border-right: 0; border-bottom: 1px solid var(--border-split); }
+      .toc-title, .toc .toc-dot { display: none; }
+      .toc a { flex: 0 0 auto; min-height: 34px; padding: 6px 10px; }
+      main { padding-top: 34px; }
+    }
+    @media (max-width: 640px) {
+      .topbar { min-height: 58px; padding: 0 16px; }
+      .brand-subtitle { display: none; }
+      .theme-button { width: 38px; padding: 0; font-size: 0; }
+      .layout { min-height: calc(100vh - 58px); }
+      main { padding: 28px 16px 56px; }
+      .hero-copy { font-size: 15px; }
+      .section { margin-top: 40px; }
+      .grid-2, .grid-3, .grid-4, .grid-5 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .token-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .semantic-row { grid-template-columns: 1fr; gap: 8px; }
+      .semantic-codes { grid-template-columns: 1fr 1fr; }
+      .type-row { grid-template-columns: 72px minmax(0, 1fr); gap: 8px 12px; }
+      .type-spec { grid-column: 2; text-align: left; }
+      .space-item { grid-template-columns: 48px minmax(50px, 1fr) 38px; gap: 8px; }
+      .space-use { display: none; }
+      .shape-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .shadow-grid, .control-grid, .motion-list { grid-template-columns: 1fr; }
+      .icon-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .panel-pad { padding: 16px; }
+      .section-head { align-items: flex-start; }
+      .section-index { padding-top: 3px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="19" height="19" class="icon-stroke"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/><path d="M8 7h8M8 11h7"/></svg>
+      </span>
+      <div><div class="brand-name">企业知识库 <span class="brand-subtitle">/ 基础样式规范</span></div></div>
+    </div>
+    <div class="top-actions">
+      <span class="caption">样式预览</span>
+      <button class="theme-button" id="theme-toggle" type="button" aria-label="切换明暗主题" title="切换明暗主题">
+        <svg id="theme-icon" viewBox="0 0 24 24" width="16" height="16" class="icon-stroke" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        <span id="theme-label">深色预览</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <nav class="toc" aria-label="基础样式目录">
+      <p class="toc-title">Foundations</p>
+      <a href="#colors"><i class="toc-dot"></i>颜色与 Seed Tokens</a>
+      <a href="#type"><i class="toc-dot"></i>字体与排版</a>
+      <a href="#spacing"><i class="toc-dot"></i>间距</a>
+      <a href="#shape"><i class="toc-dot"></i>圆角与阴影</a>
+      <a href="#components"><i class="toc-dot"></i>基础控件</a>
+      <a href="#icons"><i class="toc-dot"></i>图标</a>
+      <a href="#motion"><i class="toc-dot"></i>动效</a>
+    </nav>
+
+    <main>
+      <div class="content">
+        <header class="hero">
+          <span class="eyebrow">DESIGN FOUNDATIONS · V3.3</span>
+          <h1>基础样式规范</h1>
+          <p class="hero-copy">面向产品与前端实现的基础样式参考。这里展示颜色 Seed、排版、间距、几何、控件、图标和动效，不包含任何具体系统页面。</p>
+          <div class="hero-note">
+            <svg viewBox="0 0 24 24" width="17" height="17" class="icon-stroke" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+            <span>本页是静态样式预览。正式 Vue 界面遵循 Ant Design Vue 官方主题 API：使用 <code>ConfigProvider theme</code> 设置 Seed Token 和算法，并用 <code>theme.useToken()</code> 获取当前主题的派生值；本页的派生色样例不构成额外 Seed 或运行时算法输出。</span>
+          </div>
+        </header>
+
+        <div class="content">
+          <section id="colors" class="section">
+            <div class="section-head"><div><p class="section-kicker">01 / Color</p><h2>颜色与 Seed Tokens</h2><p class="section-description">所有颜色从统一 Seed 起源。主题算法负责浅色、深色、悬停、背景、边框与文字等派生值。</p></div><span class="section-index">01—02</span></div>
+            <div class="panel panel-pad">
+              <p class="subhead">基础 Seed</p>
+              <div class="grid grid-5">
+                <article class="seed-card"><div class="swatch" style="--swatch:var(--seed-primary)"></div><div class="seed-meta"><div class="seed-label">Primary <i class="seed-mark" style="--swatch:var(--seed-primary)"></i></div><code>colorPrimary · #16A34A</code><p>品牌与主要操作</p></div></article>
+                <article class="seed-card"><div class="swatch" style="--swatch:var(--seed-success)"></div><div class="seed-meta"><div class="seed-label">Success <i class="seed-mark" style="--swatch:var(--seed-success)"></i></div><code>colorSuccess · #059669</code><p>成功与安全状态</p></div></article>
+                <article class="seed-card"><div class="swatch" style="--swatch:var(--seed-warning)"></div><div class="seed-meta"><div class="seed-label">Warning <i class="seed-mark" style="--swatch:var(--seed-warning)"></i></div><code>colorWarning · #F59E0B</code><p>提醒与草稿状态</p></div></article>
+                <article class="seed-card"><div class="swatch" style="--swatch:var(--seed-error)"></div><div class="seed-meta"><div class="seed-label">Error <i class="seed-mark" style="--swatch:var(--seed-error)"></i></div><code>colorError · #EF4444</code><p>错误与危险操作</p></div></article>
+                <article class="seed-card"><div class="swatch" style="--swatch:var(--seed-info)"></div><div class="seed-meta"><div class="seed-label">Info <i class="seed-mark" style="--swatch:var(--seed-info)"></i></div><code>colorInfo · #4E95FF</code><p>信息与流程提示</p></div></article>
+              </div>
+              <p class="caption" style="margin:14px 0 0">中性文字与背景由官方 Seed Token <code>colorTextBase</code>、<code>colorBgBase</code> 提供基础，再由主题算法生成当前主题所需的 Alias Token。</p>
+            </div>
+
+            <div class="panel panel-pad" style="margin-top:16px">
+              <div class="section-head" style="margin-bottom:8px"><div><p class="subhead" style="margin:0">语义派生预览</p><p class="section-description">浅色与深色背景切换时，语义底色和前景从相同 Seed 派生。</p></div><span class="caption">Derived tokens</span></div>
+              <div class="semantic-row" style="--tone:var(--color-success);--tone-bg:var(--color-success-bg);--tone-text:var(--color-success-text)"><div class="semantic-name"><i class="semantic-dot"></i>成功</div><div class="semantic-preview"><span>✓ 操作成功 / 已发布</span></div><div class="semantic-codes"><code>colorSuccessBg</code><code>colorSuccessText</code></div></div>
+              <div class="semantic-row" style="--tone:var(--color-warning);--tone-bg:var(--color-warning-bg);--tone-text:var(--color-warning-text)"><div class="semantic-name"><i class="semantic-dot"></i>警告</div><div class="semantic-preview"><span>! 草稿 / 需关注</span></div><div class="semantic-codes"><code>colorWarningBg</code><code>colorWarningText</code></div></div>
+              <div class="semantic-row" style="--tone:var(--color-error);--tone-bg:var(--color-error-bg);--tone-text:var(--color-error-text)"><div class="semantic-name"><i class="semantic-dot"></i>错误</div><div class="semantic-preview"><span>× 操作失败 / 已驳回</span></div><div class="semantic-codes"><code>colorErrorBg</code><code>colorErrorText</code></div></div>
+              <div class="semantic-row" style="--tone:var(--color-info);--tone-bg:var(--color-info-bg);--tone-text:var(--color-info-text)"><div class="semantic-name"><i class="semantic-dot"></i>信息</div><div class="semantic-preview"><span>i 审批中 / 信息提示</span></div><div class="semantic-codes"><code>colorInfoBg</code><code>colorInfoText</code></div></div>
+            </div>
+            <div class="panel panel-pad" style="margin-top:16px">
+              <p class="subhead">中性色层级</p>
+              <div class="token-strip">
+                <div class="token-chip"><div class="token-chip-color" style="--chip:var(--bg-layout)"></div><div class="token-chip-body"><strong>Layout</strong><code>colorBgLayout</code></div></div>
+                <div class="token-chip"><div class="token-chip-color" style="--chip:var(--bg-container)"></div><div class="token-chip-body"><strong>Container</strong><code>colorBgContainer</code></div></div>
+                <div class="token-chip"><div class="token-chip-color" style="--chip:var(--bg-elevated)"></div><div class="token-chip-body"><strong>Elevated</strong><code>colorBgElevated</code></div></div>
+                <div class="token-chip"><div class="token-chip-color" style="--chip:var(--border)"></div><div class="token-chip-body"><strong>Border</strong><code>colorBorder</code></div></div>
+              </div>
+            </div>
+          </section>
+
+          <section id="type" class="section">
+            <div class="section-head"><div><p class="section-kicker">02 / Typography</p><h2>字体与排版</h2><p class="section-description">界面默认 14px；阅读正文 16px / 1.8 行高。层级以字号、字重和行高区分。</p></div><span class="section-index">02</span></div>
+            <div class="panel panel-pad">
+              <div class="type-row"><div class="type-label">页面标题 H1</div><div class="type-sample type-h1">设计系统基础规范</div><div class="type-spec">28px / 600 / 1.3</div></div>
+              <div class="type-row"><div class="type-label">区域标题 H2</div><div class="type-sample type-h2">颜色与 Seed Tokens</div><div class="type-spec">22px / 600 / 1.35</div></div>
+              <div class="type-row"><div class="type-label">卡片标题 H3</div><div class="type-sample type-h3">基础控件与交互状态</div><div class="type-spec">18px / 600 / 1.4</div></div>
+              <div class="type-row"><div class="type-label">小节标题 H4</div><div class="type-sample type-h4">组件结构保持清晰一致</div><div class="type-spec">16px / 600 / 1.5</div></div>
+              <div class="type-row"><div class="type-label">界面正文</div><div class="type-sample type-body">所有组件使用统一的字体阶梯、颜色和基础间距。</div><div class="type-spec">14px / 400 / 1.5</div></div>
+              <div class="type-row"><div class="type-label">辅助说明</div><div class="type-sample type-aux">用于表单说明、补充信息与次级内容。</div><div class="type-spec">13px / 400 / 1.5</div></div>
+              <div class="type-row"><div class="type-label">时间与微标</div><div class="type-sample type-caption">更新时间 · 刚刚</div><div class="type-spec">12px / 400 / 1.5</div></div>
+              <div class="reading-sample" style="margin-top:18px"><h3>阅读正文样式</h3><p>知识内容应保持轻松、连续的阅读节奏。正文采用 16px 字号与 1.8 行高，标题层级和段落间距提供稳定的视觉锚点。</p></div>
+            </div>
+            <div class="grid grid-2" style="margin-top:14px">
+              <div class="panel panel-pad"><p class="subhead">界面字体</p><div class="font-stack"><span class="small">MiSans · 界面主字体 / MiSans L3 · 级别 3 字符补充</span><code>"MiSans", "MiSans L3", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif</code><span class="caption">MiSans 覆盖 GB18030-2022 实现级别 1、2；MiSans L3 提供级别 3 字符（60,340 个），不包含级别 1、2 字符，需与 MiSans 配合。L3 仅支持 Regular 字重，其他字重由 MiSans 提供。需部署并加载对应字体文件，未命中字形时浏览器按字体栈回退。</span><span class="small" lang="zh-Hans">生僻字预览：𠖜 𠖝 𠖞 𠖟</span></div></div>
+              <div class="panel panel-pad"><p class="subhead">等宽字体栈</p><div class="font-stack"><span class="small mono">ID-2026 · SHA-256 · v3.3</span><code>"Fira Code", "SF Mono", Menlo, Consolas, "Courier New", monospace</code></div></div>
+            </div>
+          </section>
+
+          <section id="spacing" class="section">
+            <div class="section-head"><div><p class="section-kicker">03 / Spacing</p><h2>间距系统</h2><p class="section-description">以 4px 为基础网格，间距变量通过用途组合，不依赖随意的局部数值。</p></div><span class="section-index">03</span></div>
+            <div class="panel panel-pad"><div class="space-list">
+              <div class="space-item"><span class="space-name">微距</span><div class="space-bar-wrap"><div class="space-bar" style="width:4px"></div></div><span class="space-value">4px</span><span class="space-use">图标与文字</span></div>
+              <div class="space-item"><span class="space-name">紧凑</span><div class="space-bar-wrap"><div class="space-bar" style="width:8px"></div></div><span class="space-value">8px</span><span class="space-use">控件内部</span></div>
+              <div class="space-item"><span class="space-name">舒适</span><div class="space-bar-wrap"><div class="space-bar" style="width:12px"></div></div><span class="space-value">12px</span><span class="space-use">小组间隔</span></div>
+              <div class="space-item"><span class="space-name">标准</span><div class="space-bar-wrap"><div class="space-bar" style="width:16px"></div></div><span class="space-value">16px</span><span class="space-use">卡片内边距</span></div>
+              <div class="space-item"><span class="space-name">模块</span><div class="space-bar-wrap"><div class="space-bar" style="width:24px"></div></div><span class="space-value">24px</span><span class="space-use">区块间隔</span></div>
+              <div class="space-item"><span class="space-name">大区块</span><div class="space-bar-wrap"><div class="space-bar" style="width:32px"></div></div><span class="space-value">32px</span><span class="space-use">主要区域</span></div>
+              <div class="space-item"><span class="space-name">留白</span><div class="space-bar-wrap"><div class="space-bar" style="width:48px"></div></div><span class="space-value">48px</span><span class="space-use">页面分段</span></div>
+            </div></div>
+          </section>
+
+          <section id="shape" class="section">
+            <div class="section-head"><div><p class="section-kicker">04 / Shape & Elevation</p><h2>圆角、边框与阴影</h2><p class="section-description">标准控件使用 6px 圆角，内容卡片与浮层使用 8px 至 12px；边框保持轻量。</p></div><span class="section-index">04</span></div>
+            <div class="panel panel-pad"><p class="subhead">圆角阶梯</p><div class="shape-grid">
+              <div class="shape-item"><div class="shape-box" style="border-radius:4px"></div><div class="shape-label">Small<code>4px · 标签</code></div></div>
+              <div class="shape-item"><div class="shape-box" style="border-radius:6px"></div><div class="shape-label">Default<code>6px · 控件</code></div></div>
+              <div class="shape-item"><div class="shape-box" style="border-radius:8px"></div><div class="shape-label">Large<code>8px · 卡片</code></div></div>
+              <div class="shape-item"><div class="shape-box" style="border-radius:12px"></div><div class="shape-label">Panel<code>12px · 浮层</code></div></div>
+              <div class="shape-item"><div class="shape-box" style="border-radius:9999px"></div><div class="shape-label">Pill<code>9999px · 圆形</code></div></div>
+            </div></div>
+            <div class="panel panel-pad" style="margin-top:14px"><p class="subhead">层级阴影</p><div class="shadow-grid">
+              <div class="shadow-sample" style="box-shadow:var(--shadow-sm)"><div>轻量 <small>· 卡片悬停</small></div></div>
+              <div class="shadow-sample" style="box-shadow:var(--shadow-md)"><div>标准 <small>· 菜单与气泡</small></div></div>
+              <div class="shadow-sample" style="box-shadow:var(--shadow-lg)"><div>深层 <small>· 对话框与浮层</small></div></div>
+            </div><p class="caption" style="margin:16px 0 0">卡片默认采用 1px 细边框；阴影用于表达层级，不替代边框。</p></div>
+          </section>
+
+          <section id="components" class="section">
+            <div class="section-head"><div><p class="section-kicker">05 / Components</p><h2>基础控件</h2><p class="section-description">通用控件只展示基础状态，不构成任何具体业务页面。</p></div><span class="section-index">05</span></div>
+            <div class="panel panel-pad"><p class="subhead">按钮</p><div class="button-row">
+              <button class="btn btn-primary">主要操作</button><button class="btn btn-default">次要操作</button><button class="btn btn-text">文字操作</button><button class="btn btn-danger">危险操作</button><button class="btn btn-default btn-icon" type="button" aria-label="更多操作"><svg viewBox="0 0 24 24" width="16" height="16" class="icon-stroke"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></svg></button><button class="btn btn-primary" disabled>禁用状态</button>
+            </div></div>
+            <div class="panel panel-pad" style="margin-top:14px"><p class="subhead">输入控件</p><div class="control-grid">
+              <div class="field"><label for="sample-input">默认输入框</label><input class="input" id="sample-input" placeholder="请输入内容"><span class="field-help">字段说明和辅助提示。</span></div>
+              <div class="field"><label for="sample-select">选择器</label><select class="select" id="sample-select"><option>请选择一项</option><option>选项一</option></select><span class="field-help">控件高度统一，焦点显示主色描边。</span></div>
+              <div class="field"><label for="sample-focus">聚焦状态预览</label><input class="input input-focus-preview" id="sample-focus" value="键盘焦点样式"></div>
+              <div class="field"><label for="sample-error">校验错误</label><input class="input input-error" id="sample-error" value="无效输入"><span class="field-error">请检查输入内容。</span></div>
+            </div></div>
+            <div class="panel panel-pad" style="margin-top:14px"><p class="subhead">语义标签</p><div class="tag-row"><span class="tag tag-success">● 成功</span><span class="tag tag-warning">● 提醒</span><span class="tag tag-error">● 错误</span><span class="tag tag-info">● 信息</span><span class="tag tag-neutral">● 中性</span></div><p class="caption" style="margin:14px 0 0">标签前景与背景使用 Seed Token 的算法派生值，并保留可读文字。</p></div>
+            <div class="panel panel-pad" style="margin-top:14px"><p class="subhead">通用内容卡片</p><div class="sample-card"><div class="sample-card-head"><div><h3>卡片标题层级</h3><p>统一容器底色、细边框和舒适的内边距。</p></div><button class="icon-button" aria-label="更多"><svg viewBox="0 0 24 24" width="16" height="16" class="icon-stroke"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></svg></button></div><div class="sample-card-foot"><span>辅助说明</span><span>更新时间 · 刚刚</span></div></div></div>
+          </section>
+
+          <section id="icons" class="section">
+            <div class="section-head"><div><p class="section-kicker">06 / Icons</p><h2>图标系统</h2><p class="section-description">统一使用 Lucide 线性图标，标准线宽 1.5px。图标语义清晰，颜色继承 Seed 派生 Token。</p></div><span class="section-index">06</span></div>
+            <div class="panel panel-pad">
+              <div class="icon-grid">
+                <div class="icon-cell"><svg viewBox="0 0 24 24" class="icon-20 icon-stroke"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-6v-7h-4v7H4a1 1 0 0 1-1-1z"/></svg><span>Home</span></div>
+                <div class="icon-cell"><svg viewBox="0 0 24 24" class="icon-20 icon-stroke"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><span>Search</span></div>
+                <div class="icon-cell"><svg viewBox="0 0 24 24" class="icon-20 icon-stroke"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg><span>Library</span></div>
+                <div class="icon-cell"><svg viewBox="0 0 24 24" class="icon-20 icon-stroke"><path d="M3 7h7l2 2h9v10H3z"/><path d="M3 7V5h7l2 2"/></svg><span>Folder</span></div>
+                <div class="icon-cell"><svg viewBox="0 0 24 24" class="icon-20 icon-stroke"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h8"/></svg><span>FileText</span></div>
+                <div class="icon-cell"><svg viewBox="0 0 24 24" class="icon-20 icon-stroke"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9z"/></svg><span>Star</span></div>
+                <div class="icon-cell"><svg viewBox="0 0 24 24" class="icon-20 icon-stroke"><path d="M3 6h18M3 12h18M3 18h18"/></svg><span>Menu</span></div>
+                <div class="icon-cell"><svg viewBox="0 0 24 24" class="icon-20 icon-stroke"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg><span>Info</span></div>
+                <div class="icon-cell"><svg viewBox="0 0 24 24" class="icon-20 icon-stroke"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></svg><span>Bell</span></div>
+                <div class="icon-cell"><svg viewBox="0 0 24 24" class="icon-20 icon-stroke"><path d="M3 6h18M8 6V4h8v2m3 0-1 14H6L5 6m4 4v6m6-6v6"/></svg><span>Trash</span></div>
+                <div class="icon-cell"><svg viewBox="0 0 24 24" class="icon-20 icon-stroke"><circle cx="12" cy="12" r="10"/><path d="m8 12 3 3 5-6"/></svg><span>Check</span></div>
+                <div class="icon-cell"><svg viewBox="0 0 24 24" class="icon-20 icon-stroke"><path d="M12 5v14m-7-7h14"/></svg><span>Plus</span></div>
+              </div>
+              <div style="margin-top:22px"><p class="subhead">图标尺寸</p><div class="icon-size-row">
+                <svg viewBox="0 0 24 24" class="icon-12 icon-stroke"><circle cx="12" cy="12" r="9"/><path d="M12 8v4m0 4h.01"/></svg><span class="caption">12px</span>
+                <svg viewBox="0 0 24 24" class="icon-16 icon-stroke"><circle cx="12" cy="12" r="9"/><path d="M12 8v4m0 4h.01"/></svg><span class="caption">16px</span>
+                <svg viewBox="0 0 24 24" class="icon-20 icon-stroke"><circle cx="12" cy="12" r="9"/><path d="M12 8v4m0 4h.01"/></svg><span class="caption">20px</span>
+                <svg viewBox="0 0 24 24" class="icon-24 icon-stroke"><circle cx="12" cy="12" r="9"/><path d="M12 8v4m0 4h.01"/></svg><span class="caption">24px</span>
+              </div></div>
+            </div>
+          </section>
+
+          <section id="motion" class="section">
+            <div class="section-head"><div><p class="section-kicker">07 / Motion</p><h2>动效与无障碍</h2><p class="section-description">微动效保持短促、可预期，并尊重用户的减少动态效果偏好。</p></div><span class="section-index">07</span></div>
+            <div class="panel panel-pad">
+              <div class="motion-list"><div class="motion-demo"><span>标准过渡 · 200ms</span><i class="motion-dot"></i></div><div class="motion-demo"><span>轻量强调 · 150ms</span><i class="motion-dot"></i></div><div class="motion-demo"><span>悬停反馈</span><i class="motion-dot"></i></div></div>
+              <div class="grid grid-3" style="margin-top:18px">
+                <div><p class="subhead">过渡时长</p><p class="small muted">快速反馈 150ms<br>标准过渡 200ms</p></div>
+                <div><p class="subhead">缓动曲线</p><p class="small muted">标准曲线使用<br><code>cubic-bezier(.2, 0, 0, 1)</code></p></div>
+                <div><p class="subhead">减少动态</p><p class="small muted">系统遵循 <code>prefers-reduced-motion</code>，降低或关闭非必要动效。</p></div>
+              </div>
+            </div>
+          </section>
+
+          <footer class="footer-note">规范来源：<code>docs/企业知识库系统UI设计.md</code> 第 2 章。正式产品主题通过 Ant Design Vue 官方 Token API 获取；此独立文件仅用于基础样式预览。</footer>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script>
+    const root = document.documentElement;
+    const toggle = document.getElementById('theme-toggle');
+    const label = document.getElementById('theme-label');
+    const icon = document.getElementById('theme-icon');
+    const savedTheme = localStorage.getItem('kb-style-preview-theme');
+    if (savedTheme === 'dark') root.dataset.theme = 'dark';
+    const syncThemeControl = () => {
+      const dark = root.dataset.theme === 'dark';
+      label.textContent = dark ? '浅色预览' : '深色预览';
+      toggle.setAttribute('aria-label', dark ? '切换到浅色主题' : '切换到深色主题');
+      icon.innerHTML = dark
+        ? '<path d="M20.9 13A9 9 0 0 1 11 3.1 9 9 0 1 0 20.9 13Z"/>'
+        : '<circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>';
+    };
+    syncThemeControl();
+    toggle.addEventListener('click', () => {
+      root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+      localStorage.setItem('kb-style-preview-theme', root.dataset.theme);
+      syncThemeControl();
+    });
+  </script>
+</body>
+</html>
