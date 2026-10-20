@@ -1,5 +1,5 @@
 {
-  "name": "@kb/server",
-  "version": "0.1.0",
-  "private": true
+    "name": "@kb/server",
+    "version": "0.1.0",
+    "private": true
 }

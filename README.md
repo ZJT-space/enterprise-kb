@@ -18,3 +18,9 @@
 - pnpm `12.10.1`
 
 在仓库根目录使用 pnpm 管理依赖和运行 workspace 命令。
+
+## 工程命令
+
+- `pnpm lint`：检查当前已配置的 JavaScript 规则。
+- `pnpm format`：格式化应用、共享包和根级配置文件。
+- `pnpm format:check`：检查上述文件的格式。
