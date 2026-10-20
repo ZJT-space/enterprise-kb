@@ -1,5 +1,17 @@
 {
-  "name": "@kb/config",
-  "version": "0.1.0",
-  "private": true
+    "name": "@kb/config",
+    "version": "0.1.0",
+    "private": true,
+    "type": "module",
+    "exports": {
+        "./eslint/base": "./eslint/base.js",
+        "./prettier": "./prettier.config.js",
+        "./tsconfig/base.json": "./tsconfig/base.json",
+        "./tsconfig/web.json": "./tsconfig/web.json",
+        "./tsconfig/node.json": "./tsconfig/node.json"
+    },
+    "dependencies": {
+        "@eslint/js": "^10.0.1",
+        "globals": "^17.13.0"
+    }
 }
