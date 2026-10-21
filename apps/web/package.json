@@ -1,5 +1,21 @@
 {
     "name": "@kb/web",
     "version": "0.1.0",
-    "private": true
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "typecheck": "vue-tsc --noEmit",
+        "build": "pnpm typecheck && vite build"
+    },
+    "dependencies": {
+        "vue": "^3.5.43"
+    },
+    "devDependencies": {
+        "@kb/config": "workspace:*",
+        "@vitejs/plugin-vue": "^6.0.9",
+        "typescript": "^6.0.3",
+        "vite": "^8.3.4",
+        "vue-tsc": "^3.3.11"
+    }
 }
