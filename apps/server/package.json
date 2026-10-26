@@ -8,8 +8,10 @@
         "start": "nest start",
         "start:prod": "node dist/main.js",
         "build": "nest build",
+        "test": "vitest run",
+        "test:watch": "vitest",
         "typecheck": "tsc --noEmit -p tsconfig.json",
-        "lint": "eslint --config ../../eslint.config.js src"
+        "lint": "eslint --config ../../eslint.config.js src test vitest.config.ts"
     },
     "dependencies": {
         "@nestjs/common": "^12.1.3",
@@ -22,8 +24,11 @@
     "devDependencies": {
         "@kb/config": "workspace:*",
         "@nestjs/cli": "^12.0.3",
+        "@nestjs/testing": "^12.1.3",
         "@types/node": "^24.10.0",
         "eslint": "^10.0.0",
-        "typescript": "^6.0.3"
+        "typescript": "^6.0.3",
+        "vite": "^8.3.4",
+        "vitest": "^5.0.5"
     }
 }
