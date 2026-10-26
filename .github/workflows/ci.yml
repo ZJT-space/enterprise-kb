@@ -1,0 +1,53 @@
+name: CI
+
+on:
+    pull_request:
+        branches:
+            - main
+
+permissions:
+    contents: read
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+    cancel-in-progress: true
+
+jobs:
+    checks:
+        name: Lint, typecheck, test, and build
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Check out repository
+              uses: actions/checkout@v7
+
+            - name: Set up pnpm
+              uses: pnpm/action-setup@v6
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v7
+              with:
+                  node-version: 22
+                  cache: pnpm
+                  cache-dependency-path: pnpm-lock.yaml
+
+            - name: Install dependencies
+              run: pnpm install --frozen-lockfile
+
+            - name: Lint
+              run: pnpm lint
+
+            - name: Check formatting
+              run: pnpm format:check
+
+            - name: Build web app
+              run: pnpm --filter @kb/web build
+
+            - name: Typecheck server
+              run: pnpm --filter @kb/server typecheck
+
+            - name: Test server
+              run: pnpm --filter @kb/server test
+
+            - name: Build server
+              run: pnpm --filter @kb/server build

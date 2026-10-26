@@ -9,8 +9,8 @@
     },
     "scripts": {
         "lint": "eslint .",
-        "format": "prettier --write \"apps/**/*\" \"packages/**/*\" \"*.{js,json}\" \".vscode/*.json\"",
-        "format:check": "prettier --check \"apps/**/*\" \"packages/**/*\" \"*.{js,json}\" \".vscode/*.json\""
+        "format": "prettier --write \"apps/**/*\" \"packages/**/*\" \"*.{js,json}\" \".vscode/*.json\" \".github/**/*.{yml,yaml}\"",
+        "format:check": "prettier --check \"apps/**/*\" \"packages/**/*\" \"*.{js,json}\" \".vscode/*.json\" \".github/**/*.{yml,yaml}\""
     },
     "devDependencies": {
         "@kb/config": "workspace:*",
