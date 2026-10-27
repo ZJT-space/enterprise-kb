@@ -16,6 +16,7 @@
     },
     "scripts": {
         "build": "pnpm --recursive --if-present run build",
+        "dev": "pnpm --parallel --recursive --if-present run dev",
         "lint": "eslint .",
         "format": "prettier --write \"apps/**/*\" \"packages/**/*\" \"*.{js,json}\" \".vscode/*.json\" \".github/**/*.{yml,yaml}\"",
         "format:check": "prettier --check \"apps/**/*\" \"packages/**/*\" \"*.{js,json}\" \".vscode/*.json\" \".github/**/*.{yml,yaml}\"",
