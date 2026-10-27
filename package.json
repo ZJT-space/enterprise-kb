@@ -15,9 +15,12 @@
         "node": ">=22.13.0"
     },
     "scripts": {
+        "build": "pnpm --recursive --if-present run build",
         "lint": "eslint .",
         "format": "prettier --write \"apps/**/*\" \"packages/**/*\" \"*.{js,json}\" \".vscode/*.json\" \".github/**/*.{yml,yaml}\"",
         "format:check": "prettier --check \"apps/**/*\" \"packages/**/*\" \"*.{js,json}\" \".vscode/*.json\" \".github/**/*.{yml,yaml}\"",
+        "test": "pnpm --recursive --if-present run test",
+        "typecheck": "pnpm --recursive --if-present run typecheck",
         "prepare": "husky"
     },
     "lint-staged": {

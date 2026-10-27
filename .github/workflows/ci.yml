@@ -50,14 +50,11 @@ jobs:
             - name: Check formatting
               run: pnpm format:check
 
-            - name: Build web app
-              run: pnpm --filter @kb/web build
+            - name: Typecheck workspaces
+              run: pnpm typecheck
 
-            - name: Typecheck server
-              run: pnpm --filter @kb/server typecheck
+            - name: Test workspaces
+              run: pnpm test
 
-            - name: Test server
-              run: pnpm --filter @kb/server test
-
-            - name: Build server
-              run: pnpm --filter @kb/server build
+            - name: Build workspaces
+              run: pnpm build
