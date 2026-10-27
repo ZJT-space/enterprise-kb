@@ -21,6 +21,9 @@
 
 ## 工程命令
 
+- `pnpm typecheck`：运行所有工作区中已配置的类型检查。
+- `pnpm test`：运行所有工作区中已配置的测试。
+- `pnpm build`：构建所有工作区中已配置的应用和共享包。
 - `pnpm lint`：检查当前已配置的 JavaScript 规则。
 - `pnpm format`：格式化应用、共享包和根级配置文件。
 - `pnpm format:check`：检查上述文件的格式。
