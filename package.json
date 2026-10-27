@@ -21,6 +21,8 @@
         "*.{json,md,html,css,scss,yml,yaml}": "prettier --write"
     },
     "devDependencies": {
+        "@commitlint/cli": "^21.2.4",
+        "@commitlint/config-conventional": "^21.2.4",
         "@kb/config": "workspace:*",
         "eslint": "^10.12.0",
         "husky": "^9.1.7",
