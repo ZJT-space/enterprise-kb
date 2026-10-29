@@ -18,8 +18,8 @@
         "build": "pnpm --recursive --if-present run build",
         "dev": "pnpm --parallel --recursive --if-present run dev",
         "lint": "eslint .",
-        "format": "prettier --write \"apps/**/*\" \"packages/**/*\" \"*.{js,json}\" \".vscode/*.json\" \".github/**/*.{yml,yaml}\"",
-        "format:check": "prettier --check \"apps/**/*\" \"packages/**/*\" \"*.{js,json}\" \".vscode/*.json\" \".github/**/*.{yml,yaml}\"",
+        "format": "prettier --write \"apps/**/*\" \"packages/**/*\" \"*.{js,json,md}\" \"compose.yaml\" \".vscode/*.json\" \".github/**/*.{yml,yaml}\"",
+        "format:check": "prettier --check \"apps/**/*\" \"packages/**/*\" \"*.{js,json,md}\" \"compose.yaml\" \".vscode/*.json\" \".github/**/*.{yml,yaml}\"",
         "test": "pnpm --recursive --if-present run test",
         "typecheck": "pnpm --recursive --if-present run typecheck",
         "prepare": "husky"
