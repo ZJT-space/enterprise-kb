@@ -19,6 +19,19 @@
 
 在仓库根目录使用 pnpm 管理依赖和运行 workspace 命令。
 
+## 本地数据库
+
+复制环境变量示例并启动 PostgreSQL：
+
+```bash
+cp .env.example .env
+docker compose up -d postgres
+```
+
+可用 `docker compose ps` 查看服务状态，用 `docker compose down` 停止服务。数据库数据保存在 Docker 命名卷中，停止服务时会保留。
+
+默认连接地址为 `localhost:5432`，数据库名和账号密码见本地 `.env` 文件。示例凭据仅供本地开发使用。
+
 ## 工程命令
 
 - `pnpm dev`：并行启动所有工作区中已配置的开发服务。
