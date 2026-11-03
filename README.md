@@ -32,6 +32,16 @@ docker compose up -d postgres
 
 默认连接地址为 `localhost:5432`，数据库名和账号密码见本地 `.env` 文件。示例凭据仅供本地开发使用。
 
+### 数据库迁移
+
+修改 `apps/server/prisma/schema.prisma` 后，在本地创建并应用迁移：
+
+```bash
+pnpm --filter @kb/server db:migrate:dev --name add_document_table
+```
+
+迁移文件保存在 `apps/server/prisma/migrations/`，需要和代码一起提交。CI 和部署环境使用 `db:migrate:deploy` 应用已提交的迁移；`db:migrate:status` 可查看数据库迁移状态。不要在生产环境使用开发迁移命令。
+
 ## 工程命令
 
 - `pnpm dev`：并行启动所有工作区中已配置的开发服务。
