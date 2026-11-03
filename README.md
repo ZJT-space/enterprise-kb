@@ -32,6 +32,8 @@ docker compose up -d postgres
 
 默认连接地址为 `localhost:5432`，数据库名和账号密码见本地 `.env` 文件。示例凭据仅供本地开发使用。
 
+服务启动时会校验环境变量：`DATABASE_URL` 必须是 PostgreSQL 连接地址，`PORT` 必须是 1 到 65535 的整数，未设置时默认使用 `3000`。校验失败时服务会在启动阶段报错。
+
 ### 数据库迁移
 
 修改 `apps/server/prisma/schema.prisma` 后，在本地创建并应用迁移：
