@@ -53,6 +53,14 @@ jobs:
             - name: Install dependencies
               run: pnpm install --frozen-lockfile
 
+            - name: Apply Prisma migrations
+              run: |
+                  if find apps/server/prisma/migrations -mindepth 2 -name migration.sql -print -quit | grep -q .; then
+                      pnpm --filter @kb/server db:migrate:deploy
+                  else
+                      echo "No application migrations found; skipping deployment."
+                  fi
+
             - name: Lint commit messages
               env:
                   BASE_SHA: ${{ github.event.pull_request.base.sha }}
