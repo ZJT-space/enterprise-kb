@@ -38,6 +38,21 @@ docker compose up -d postgres
 
 服务启动后可请求 `GET http://localhost:3000/health` 检查服务和数据库连接。数据库可用时返回 HTTP `200` 和 `{"status":"ok","database":"ok"}`；数据库不可用时返回 HTTP `503` 和 `{"status":"error","database":"unavailable"}`。
 
+### 服务端成功响应
+
+正常业务接口的成功响应统一包装为 `code`、`message`、`data` 和 ISO 8601 格式的 `timestamp`：
+
+```json
+{
+    "code": 20000,
+    "message": "success",
+    "data": {},
+    "timestamp": "2026-11-04T12:00:00.000Z"
+}
+```
+
+健康检查使用 `@BypassTransform()` 保留简洁响应格式。后续文件流接口也可使用此装饰器跳过 JSON 包装。
+
 ### 数据库迁移
 
 修改 `apps/server/prisma/schema.prisma` 后，在本地创建并应用迁移：

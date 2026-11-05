@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 import { z } from 'zod';
 import { fileURLToPath } from 'node:url';
 import { PrismaModule } from './prisma/prisma.module.js';
 import { HealthModule } from './health/health.module.js';
+import { ResponseTransformInterceptor } from './common/interceptors/response-transform.interceptor.js';
 
 @Module({
     imports: [
@@ -24,6 +26,12 @@ import { HealthModule } from './health/health.module.js';
         }),
         PrismaModule,
         HealthModule,
+    ],
+    providers: [
+        {
+            provide: APP_INTERCEPTOR,
+            useClass: ResponseTransformInterceptor,
+        },
     ],
 })
 export class AppModule {}
