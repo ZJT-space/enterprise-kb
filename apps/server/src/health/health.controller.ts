@@ -1,10 +1,12 @@
 import { Controller, Get, ServiceUnavailableException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service.js';
+import { BypassTransform } from '../common/decorators/bypass-transform.decorator.js';
 
 @Controller('health')
 export class HealthController {
     constructor(private readonly prismaService: PrismaService) {}
 
+    @BypassTransform()
     @Get()
     async check(): Promise<{ status: 'ok'; database: 'ok' }> {
         try {
