@@ -36,7 +36,7 @@ docker compose up -d postgres
 
 ### 服务健康检查
 
-服务启动后可请求 `GET http://localhost:3000/health` 检查服务和数据库连接。数据库可用时返回 HTTP `200` 和 `{"status":"ok","database":"ok"}`；数据库不可用时返回 HTTP `503` 和 `{"status":"error","database":"unavailable"}`。
+服务启动后可请求 `GET http://localhost:3000/health` 检查服务和数据库连接。数据库可用时返回 HTTP `200` 和 `{"status":"ok","database":"ok"}`；数据库不可用时返回 HTTP `503`，错误体遵循下方统一错误响应格式。
 
 ### 服务端成功响应
 
@@ -52,6 +52,19 @@ docker compose up -d postgres
 ```
 
 健康检查使用 `@BypassTransform()` 保留简洁响应格式。后续文件流接口也可使用此装饰器跳过 JSON 包装。
+
+### 服务端错误响应
+
+错误响应保留标准 HTTP 状态码，并使用相同的字段结构。服务端错误的详细信息只写入服务日志，不会返回给调用方：
+
+```json
+{
+    "code": 50000,
+    "message": "服务器内部错误",
+    "data": null,
+    "timestamp": "2026-11-04T12:00:00.000Z"
+}
+```
 
 ### 数据库迁移
 
