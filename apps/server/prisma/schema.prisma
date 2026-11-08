@@ -1,8 +1,46 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+    provider = "prisma-client"
+    output   = "../src/generated/prisma"
 }
 
 datasource db {
-  provider = "postgresql"
+    provider = "postgresql"
+}
+
+/// 系统账号及其全局角色信息。
+model User {
+    /// 使用数据库生成的 UUIDv4 作为主键。
+    id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+    /// 用户名，全局唯一。
+    username String @unique @db.VarChar(64)
+
+    /// 邮箱地址，全局唯一。
+    email String @unique @db.VarChar(128)
+
+    /// 用户在系统中显示的名称。
+    nickname String @db.VarChar(64)
+
+    /// 头像资源地址；未设置时为空。
+    avatarUrl String? @map("avatar_url") @db.VarChar(512)
+
+    /// Argon2id 密码哈希，不保存明文密码。
+    passwordHash String @map("password_hash") @db.VarChar(255)
+
+    /// 全局角色只允许 system_admin、kb_admin、general_user。
+    globalRole String @default("general_user") @map("global_role") @db.VarChar(32)
+
+    /// 管理员初始创建或重置密码后，要求用户首次登录时修改。
+    mustChangePassword Boolean @default(true) @map("must_change_password")
+
+    /// 账号状态只允许 active 或 disabled。
+    status String @default("active") @db.VarChar(16)
+
+    /// 账号创建时间，统一以带时区的时间保存。
+    createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+    /// 最近更新时间，由数据库触发器自动维护。
+    updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+    @@map("users")
 }
