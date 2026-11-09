@@ -19,18 +19,20 @@
 
 在仓库根目录使用 pnpm 管理依赖和运行 workspace 命令。
 
-## 本地数据库
+## 本地数据库与缓存
 
-复制环境变量示例并启动 PostgreSQL：
+复制环境变量示例并启动 PostgreSQL 和 Redis：
 
 ```bash
 cp .env.example .env
-docker compose up -d postgres
+docker compose up -d postgres redis
 ```
 
-可用 `docker compose ps` 查看服务状态，用 `docker compose down` 停止服务。数据库数据保存在 Docker 命名卷中，停止服务时会保留。
+如果本地已有 `.env` 文件，将 `.env.example` 中新增的 `REDIS_*` 配置补充到 `.env` 后再启动服务。
 
-默认连接地址为 `localhost:5432`，数据库名和账号密码见本地 `.env` 文件。示例凭据仅供本地开发使用。
+可用 `docker compose ps` 查看服务状态，用 `docker compose down` 停止服务。PostgreSQL 和 Redis 数据分别保存在 Docker 命名卷中，停止服务时会保留。
+
+PostgreSQL 默认连接地址为 `localhost:5432`，数据库名和账号密码见本地 `.env` 文件。Redis 默认连接地址为 `localhost:6379`，使用 `.env` 中的密码认证。示例凭据仅供本地开发使用。
 
 服务启动时会校验环境变量：`DATABASE_URL` 必须是 PostgreSQL 连接地址，`PORT` 必须是 1 到 65535 的整数，未设置时默认使用 `3000`。校验失败时服务会在启动阶段报错。
 
