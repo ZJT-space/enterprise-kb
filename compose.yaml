@@ -15,6 +15,31 @@ services:
             timeout: 5s
             retries: 10
             start_period: 10s
+    redis:
+        image: redis:7.2-alpine
+        command:
+            [
+                'redis-server',
+                '--appendonly',
+                'yes',
+                '--requirepass',
+                '${REDIS_PASSWORD:?Copy .env.example to .env before starting Redis}',
+            ]
+        environment:
+            REDIS_PASSWORD: ${REDIS_PASSWORD:?Copy .env.example to .env before starting Redis}
+        ports:
+            - '${REDIS_PORT:-6379}:6379'
+        volumes:
+            # 使用 AOF 和 Docker 命名卷保留本地 Redis 数据。
+            - redis_data:/data
+        healthcheck:
+            # 通过环境变量传递密码，避免把密码写入健康检查参数。
+            test: ['CMD-SHELL', 'REDISCLI_AUTH=$${REDIS_PASSWORD} redis-cli ping | grep -q PONG']
+            interval: 5s
+            timeout: 5s
+            retries: 10
+            start_period: 5s
 
 volumes:
     postgres_data:
+    redis_data:
