@@ -8,6 +8,7 @@ import { HealthModule } from './health/health.module.js';
 import { ResponseTransformInterceptor } from './common/interceptors/response-transform.interceptor.js';
 import { AllExceptionsFilter } from './common/filters/all-exceptions.filter.js';
 import { RedisModule } from './redis/redis.module.js';
+import { PasswordHashModule } from './security/password-hash.module.js';
 
 @Module({
     imports: [
@@ -35,6 +36,7 @@ import { RedisModule } from './redis/redis.module.js';
         }),
         PrismaModule,
         RedisModule,
+        PasswordHashModule,
         HealthModule,
     ],
     providers: [

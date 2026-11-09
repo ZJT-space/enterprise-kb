@@ -252,6 +252,9 @@ importers:
             '@prisma/client':
                 specifier: ^7.10.0
                 version: 7.10.1(prisma@7.10.1(@types/node@24.19.2)(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(typescript@6.0.3))(typescript@6.0.3)
+            argon2:
+                specifier: ^0.45.2
+                version: 0.45.2
             dotenv:
                 specifier: ^17.2.3
                 version: 17.4.2
@@ -1436,6 +1439,19 @@ packages:
         peerDependencies:
             '@redis/client': ^5.12.1
 
+    '@epic-web/invariant@1.0.0':
+        resolution:
+            {
+                integrity: sha512-lrTPqgvfFQtR/eY/qkIzp98OGdNJu0m5ji3q/nJI8v3SXkRKEnWiOxMmbvcSoAIzv/cGiuvRy57k4suKQSAdwA==,
+            }
+
+    '@phc/format@1.0.0':
+        resolution:
+            {
+                integrity: sha512-m7X9U6BG2+J+R1lSOdCiITLLrxm+cWlNI3HUFA92oLO77ObGNzaKdh8pMLqdZcshtkKuV84olNNXDfMc4FezBQ==,
+            }
+        engines: { node: '>=10' }
+
     '@redis/time-series@5.12.1':
         resolution:
             {
@@ -2298,6 +2314,13 @@ packages:
             }
         engines: { node: '>=14' }
 
+    argon2@0.45.2:
+        resolution:
+            {
+                integrity: sha512-41gOiSQBpQf+7H7HyLZbUqRZxrNk5ps39TsJKILjWuOyAOialUkztuIVL/Y/l+n5iSA2C4/jFg3FUYso/cX7TA==,
+            }
+        engines: { node: '>=16.17.0' }
+
     argparse@2.0.1:
         resolution:
             {
@@ -2569,6 +2592,14 @@ packages:
         peerDependenciesMeta:
             typescript:
                 optional: true
+
+    cross-env@10.1.0:
+        resolution:
+            {
+                integrity: sha512-GsYosgnACZTADcmEyJctkJIoqAhHjttw7RsFrVoJNXbsWWqaq6Ym+7kZjq6mS45O0jij6vtiReppKQEtqWy6Dw==,
+            }
+        engines: { node: '>=20' }
+        hasBin: true
 
     cross-spawn@7.0.6:
         resolution:
@@ -3784,6 +3815,20 @@ packages:
             }
         engines: { node: '>=18' }
 
+    node-addon-api@8.9.2:
+        resolution:
+            {
+                integrity: sha512-VijLXbi3UACN69I0JVXJsX4tjACjNoQDgv2gTF6sx2wWEi8tkSg2eX8p5gSIFi8z2+DL3oHmY6OyKce38SDolg==,
+            }
+        engines: { node: ^18 || ^20 || >= 21 }
+
+    node-gyp-build@4.8.4:
+        resolution:
+            {
+                integrity: sha512-LA4ZjwlnUblHVgq0oBF3Jl/6h/Nvs5fzBLwdEF4nuxnFdsfajde4WfxtJr3CaiH+F6ewcIB/q4jQ4UzPyid+CQ==,
+            }
+        hasBin: true
+
     nth-check@2.1.1:
         resolution:
             {
@@ -4871,6 +4916,10 @@ snapshots:
             source-map: 0.8.0
         optionalDependencies:
             chokidar: 5.0.0
+
+    '@epic-web/invariant@1.0.0': {}
+
+    '@phc/format@1.0.0': {}
 
     '@angular-devkit/schematics-cli@22.2.3(@types/node@24.19.2)(chokidar@5.0.0)':
         dependencies:
@@ -6086,6 +6135,13 @@ snapshots:
 
     ansis@4.4.0: {}
 
+    argon2@0.45.2:
+        dependencies:
+            '@phc/format': 1.0.0
+            cross-env: 10.1.0
+            node-addon-api: 8.9.2
+            node-gyp-build: 4.8.4
+
     argparse@2.0.1: {}
 
     argue-cli@3.2.0: {}
@@ -6221,6 +6277,11 @@ snapshots:
             parse-json: 5.2.0
         optionalDependencies:
             typescript: 7.0.2
+
+    cross-env@10.1.0:
+        dependencies:
+            '@epic-web/invariant': 1.0.0
+            cross-spawn: 7.0.6
 
     cross-spawn@7.0.6:
         dependencies:
@@ -6848,6 +6909,10 @@ snapshots:
             char-regex: 1.0.2
             emojilib: 2.4.0
             skin-tone: 2.0.0
+
+    node-addon-api@8.9.2: {}
+
+    node-gyp-build@4.8.4: {}
 
     nth-check@2.1.1:
         dependencies:
