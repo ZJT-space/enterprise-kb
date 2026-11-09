@@ -9,6 +9,7 @@ import { ResponseTransformInterceptor } from './common/interceptors/response-tra
 import { AllExceptionsFilter } from './common/filters/all-exceptions.filter.js';
 import { RedisModule } from './redis/redis.module.js';
 import { PasswordHashModule } from './security/password-hash.module.js';
+import { AccessTokenModule } from './security/access-token.module.js';
 
 @Module({
     imports: [
@@ -17,6 +18,7 @@ import { PasswordHashModule } from './security/password-hash.module.js';
             envFilePath: fileURLToPath(new URL('../../../.env', import.meta.url)),
             validationSchema: z.object({
                 PORT: z.coerce.number().int().min(1).max(65535).default(3000),
+                ACCESS_TOKEN_SECRET: z.string().min(32),
                 DATABASE_URL: z
                     .string()
                     .url()
@@ -37,6 +39,7 @@ import { PasswordHashModule } from './security/password-hash.module.js';
         PrismaModule,
         RedisModule,
         PasswordHashModule,
+        AccessTokenModule,
         HealthModule,
     ],
     providers: [

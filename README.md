@@ -34,7 +34,7 @@ docker compose up -d postgres redis
 
 PostgreSQL 默认连接地址为 `localhost:5432`，数据库名和账号密码见本地 `.env` 文件。Redis 默认连接地址为 `localhost:6379`，使用 `.env` 中的密码认证。示例凭据仅供本地开发使用。
 
-服务启动时会校验环境变量：`DATABASE_URL` 必须是 PostgreSQL 连接地址，`REDIS_URL` 必须是 Redis 连接地址，`PORT` 必须是 1 到 65535 的整数，未设置时默认使用 `3000`。已有 `.env` 文件需要补充新增的 Redis 配置；校验失败时服务会在启动阶段报错。
+服务启动时会校验环境变量：`DATABASE_URL` 必须是 PostgreSQL 连接地址，`REDIS_URL` 必须是 Redis 连接地址，`ACCESS_TOKEN_SECRET` 至少 32 个字符，`PORT` 必须是 1 到 65535 的整数，未设置时默认使用 `3000`。已有 `.env` 文件需要补充新增的配置；校验失败时服务会在启动阶段报错。`.env.example` 中的密钥仅供本地开发，部署时请用 `openssl rand -base64 32` 生成独立密钥。
 
 ### 服务健康检查
 
