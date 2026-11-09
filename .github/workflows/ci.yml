@@ -20,6 +20,7 @@ jobs:
             HUSKY: 0
             DATABASE_URL: postgresql://enterprise_kb:local_dev_password@localhost:5432/enterprise_kb
             REDIS_URL: redis://:local_dev_redis_password@localhost:6379
+            ACCESS_TOKEN_SECRET: local-development-only-access-token-secret-change-before-deployment
         services:
             postgres:
                 image: postgres:16-alpine
