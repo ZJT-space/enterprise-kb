@@ -5,6 +5,7 @@ import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import type { INestApplication } from '@nestjs/common';
 import { AppModule } from '../src/app.module.js';
 import { PrismaService } from '../src/prisma/prisma.service.js';
+import { RedisService } from '../src/redis/redis.service.js';
 
 @Controller('response-test')
 class ResponseTestController {
@@ -35,6 +36,7 @@ class ExceptionTestController {
 describe('App bootstrap', () => {
     let app: INestApplication;
     const queryRaw = vi.fn();
+    const ping = vi.fn();
 
     beforeAll(async () => {
         const moduleRef = await Test.createTestingModule({
@@ -43,6 +45,8 @@ describe('App bootstrap', () => {
         })
             .overrideProvider(PrismaService)
             .useValue({ $queryRaw: queryRaw })
+            .overrideProvider(RedisService)
+            .useValue({ ping })
             .compile();
 
         app = moduleRef.createNestApplication(new FastifyAdapter());
@@ -76,6 +80,7 @@ describe('App bootstrap', () => {
 
     it('reports a healthy service when the database query succeeds', async () => {
         queryRaw.mockResolvedValueOnce([{ '?column?': 1 }]);
+        ping.mockResolvedValueOnce('PONG');
 
         const response = await app.getHttpAdapter().getInstance().inject({
             method: 'GET',
@@ -83,11 +88,28 @@ describe('App bootstrap', () => {
         });
 
         expect(response.statusCode).toBe(200);
-        expect(response.json()).toEqual({ status: 'ok', database: 'ok' });
+        expect(response.json()).toEqual({ status: 'ok', database: 'ok', redis: 'ok' });
     });
 
     it('reports the service as unavailable when the database query fails', async () => {
         queryRaw.mockRejectedValueOnce(new Error('database unavailable'));
+
+        const response = await app.getHttpAdapter().getInstance().inject({
+            method: 'GET',
+            url: '/health',
+        });
+
+        expect(response.statusCode).toBe(503);
+        expect(response.json()).toMatchObject({
+            code: 50000,
+            message: '服务器内部错误',
+            data: null,
+        });
+    });
+
+    it('reports the service as unavailable when the Redis query fails', async () => {
+        queryRaw.mockResolvedValueOnce([{ '?column?': 1 }]);
+        ping.mockRejectedValueOnce(new Error('Redis unavailable'));
 
         const response = await app.getHttpAdapter().getInstance().inject({
             method: 'GET',

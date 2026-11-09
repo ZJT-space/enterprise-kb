@@ -19,6 +19,7 @@ jobs:
         env:
             HUSKY: 0
             DATABASE_URL: postgresql://enterprise_kb:local_dev_password@localhost:5432/enterprise_kb
+            REDIS_URL: redis://:local_dev_redis_password@localhost:6379
         services:
             postgres:
                 image: postgres:16-alpine
@@ -30,6 +31,17 @@ jobs:
                     - 5432:5432
                 options: >-
                     --health-cmd "pg_isready -U enterprise_kb -d enterprise_kb"
+                    --health-interval 5s
+                    --health-timeout 5s
+                    --health-retries 10
+            redis:
+                image: redis:7.2-alpine
+                env:
+                    REDIS_PASSWORD: local_dev_redis_password
+                ports:
+                    - 6379:6379
+                options: >-
+                    --health-cmd "REDISCLI_AUTH=local_dev_redis_password redis-cli ping | grep -q PONG"
                     --health-interval 5s
                     --health-timeout 5s
                     --health-retries 10
