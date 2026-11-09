@@ -7,6 +7,7 @@ import { PrismaModule } from './prisma/prisma.module.js';
 import { HealthModule } from './health/health.module.js';
 import { ResponseTransformInterceptor } from './common/interceptors/response-transform.interceptor.js';
 import { AllExceptionsFilter } from './common/filters/all-exceptions.filter.js';
+import { RedisModule } from './redis/redis.module.js';
 
 @Module({
     imports: [
@@ -23,9 +24,17 @@ import { AllExceptionsFilter } from './common/filters/all-exceptions.filter.js';
                             value.startsWith('postgres://') || value.startsWith('postgresql://'),
                         'must be a PostgreSQL connection URL',
                     ),
+                REDIS_URL: z
+                    .string()
+                    .url()
+                    .refine(
+                        (value) => value.startsWith('redis://') || value.startsWith('rediss://'),
+                        'must be a Redis connection URL',
+                    ),
             }),
         }),
         PrismaModule,
+        RedisModule,
         HealthModule,
     ],
     providers: [
