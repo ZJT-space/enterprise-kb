@@ -1,6 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { AccessTokenService } from './access-token.service.js';
 import { PasswordHashService } from './password-hash.service.js';
+import { LoginAttemptProtectionService } from './login-attempt-protection.service.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 
 export interface PasswordLoginResult {
@@ -20,9 +21,12 @@ export class PasswordLoginService {
         private readonly prisma: PrismaService,
         private readonly passwordHashService: PasswordHashService,
         private readonly accessTokenService: AccessTokenService,
+        private readonly loginAttemptProtection: LoginAttemptProtectionService,
     ) {}
 
     async authenticate(identifier: string, password: string): Promise<PasswordLoginResult> {
+        await this.loginAttemptProtection.assertNotLocked(identifier);
+
         const user = await this.prisma.user.findFirst({
             where: {
                 OR: [{ username: identifier }, { email: identifier }],
@@ -44,9 +48,11 @@ export class PasswordLoginService {
             user.status !== 'active' ||
             !(await this.passwordHashService.verifyPassword(user.passwordHash, password))
         ) {
+            await this.loginAttemptProtection.recordFailure(identifier);
             throw new UnauthorizedException('Invalid credentials');
         }
 
+        await this.loginAttemptProtection.clearFailures(identifier);
         const accessToken = await this.accessTokenService.issueAccessToken(user.id);
 
         return {
