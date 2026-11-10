@@ -30,4 +30,50 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
     async ping(): Promise<string> {
         return this.client.ping();
     }
+
+    async getValue(key: string): Promise<string | null> {
+        return this.client.get(key);
+    }
+
+    async deleteKey(key: string): Promise<number> {
+        return this.client.del(key);
+    }
+
+    async recordLoginFailure(
+        failuresKey: string,
+        lockKey: string,
+        maximumFailures: number,
+        failureWindowSeconds: number,
+        lockDurationSeconds: number,
+    ): Promise<number> {
+        // 用 Lua 将失败计数、窗口过期和锁定写入作为一个原子操作，避免并发登录漏计。
+        const result = await this.client.eval(
+            `
+                if redis.call('EXISTS', KEYS[2]) == 1 then
+                    return -1
+                end
+
+                local failures = redis.call('INCR', KEYS[1])
+                if failures == 1 then
+                    redis.call('EXPIRE', KEYS[1], ARGV[2])
+                end
+
+                if failures >= tonumber(ARGV[1]) then
+                    redis.call('SET', KEYS[2], '1', 'EX', ARGV[3], 'NX')
+                end
+
+                return failures
+            `,
+            {
+                keys: [failuresKey, lockKey],
+                arguments: [
+                    String(maximumFailures),
+                    String(failureWindowSeconds),
+                    String(lockDurationSeconds),
+                ],
+            },
+        );
+
+        return Number(result);
+    }
 }

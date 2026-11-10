@@ -4,6 +4,7 @@ import { PasswordLoginService } from '../src/security/password-login.service.js'
 import type { PrismaService } from '../src/prisma/prisma.service.js';
 import type { PasswordHashService } from '../src/security/password-hash.service.js';
 import type { AccessTokenService } from '../src/security/access-token.service.js';
+import type { LoginAttemptProtectionService } from '../src/security/login-attempt-protection.service.js';
 
 describe('PasswordLoginService', () => {
     const user = {
@@ -18,10 +19,18 @@ describe('PasswordLoginService', () => {
     const findFirst = vi.fn();
     const verifyPassword = vi.fn();
     const issueAccessToken = vi.fn();
+    const assertNotLocked = vi.fn();
+    const recordFailure = vi.fn();
+    const clearFailures = vi.fn();
     const service = new PasswordLoginService(
         { user: { findFirst } } as unknown as PrismaService,
         { verifyPassword } as unknown as PasswordHashService,
         { issueAccessToken } as unknown as AccessTokenService,
+        {
+            assertNotLocked,
+            recordFailure,
+            clearFailures,
+        } as unknown as LoginAttemptProtectionService,
     );
 
     beforeEach(() => {
@@ -29,6 +38,9 @@ describe('PasswordLoginService', () => {
         findFirst.mockResolvedValue(user);
         verifyPassword.mockResolvedValue(true);
         issueAccessToken.mockResolvedValue('signed-access-token');
+        assertNotLocked.mockResolvedValue(undefined);
+        recordFailure.mockResolvedValue(1);
+        clearFailures.mockResolvedValue(undefined);
     });
 
     it('authenticates with the supplied username or email and returns a token', async () => {
@@ -47,6 +59,8 @@ describe('PasswordLoginService', () => {
             },
         });
         expect(verifyPassword).toHaveBeenCalledWith(user.passwordHash, 'correct-password');
+        expect(assertNotLocked).toHaveBeenCalledWith(user.email);
+        expect(clearFailures).toHaveBeenCalledWith(user.email);
         expect(issueAccessToken).toHaveBeenCalledWith(user.id);
         expect(result).toEqual({
             accessToken: 'signed-access-token',
@@ -68,6 +82,7 @@ describe('PasswordLoginService', () => {
             UnauthorizedException,
         );
         expect(verifyPassword).not.toHaveBeenCalled();
+        expect(recordFailure).toHaveBeenCalledWith('missing-user');
         expect(issueAccessToken).not.toHaveBeenCalled();
     });
 
@@ -78,6 +93,7 @@ describe('PasswordLoginService', () => {
             UnauthorizedException,
         );
         expect(verifyPassword).not.toHaveBeenCalled();
+        expect(recordFailure).toHaveBeenCalledWith(user.username);
         expect(issueAccessToken).not.toHaveBeenCalled();
     });
 
@@ -87,6 +103,17 @@ describe('PasswordLoginService', () => {
         await expect(service.authenticate(user.username, 'wrong-password')).rejects.toThrow(
             UnauthorizedException,
         );
+        expect(recordFailure).toHaveBeenCalledWith(user.username);
         expect(issueAccessToken).not.toHaveBeenCalled();
+    });
+
+    it('does not query credentials when the identifier is locked', async () => {
+        assertNotLocked.mockRejectedValue(new UnauthorizedException('Invalid credentials'));
+
+        await expect(service.authenticate(user.username, 'password')).rejects.toThrow(
+            UnauthorizedException,
+        );
+        expect(findFirst).not.toHaveBeenCalled();
+        expect(recordFailure).not.toHaveBeenCalled();
     });
 });
