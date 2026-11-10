@@ -76,4 +76,39 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
 
         return Number(result);
     }
+
+    async consumeSlidingWindowRequest(
+        key: string,
+        nowMilliseconds: number,
+        windowMilliseconds: number,
+        maximumRequests: number,
+        member: string,
+    ): Promise<boolean> {
+        // 用单个 Lua 脚本清理旧请求并判断配额，确保并发请求共用同一限流结果。
+        const result = await this.client.eval(
+            `
+                redis.call('ZREMRANGEBYSCORE', KEYS[1], '-inf', ARGV[1] - ARGV[2])
+                local requestCount = redis.call('ZCARD', KEYS[1])
+
+                if requestCount >= tonumber(ARGV[3]) then
+                    return 0
+                end
+
+                redis.call('ZADD', KEYS[1], ARGV[1], ARGV[4])
+                redis.call('PEXPIRE', KEYS[1], ARGV[2])
+                return 1
+            `,
+            {
+                keys: [key],
+                arguments: [
+                    String(nowMilliseconds),
+                    String(windowMilliseconds),
+                    String(maximumRequests),
+                    member,
+                ],
+            },
+        );
+
+        return Number(result) === 1;
+    }
 }
