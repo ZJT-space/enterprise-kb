@@ -1,11 +1,21 @@
-import { BadRequestException, Controller, Get, NotFoundException } from '@nestjs/common';
+import {
+    BadRequestException,
+    Controller,
+    Get,
+    HttpException,
+    HttpStatus,
+    NotFoundException,
+    UnauthorizedException,
+} from '@nestjs/common';
 import { FastifyAdapter } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
-import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
+import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { INestApplication } from '@nestjs/common';
 import { AppModule } from '../src/app.module.js';
 import { PrismaService } from '../src/prisma/prisma.service.js';
 import { RedisService } from '../src/redis/redis.service.js';
+import { LoginIpRateLimitService } from '../src/security/login-ip-rate-limit.service.js';
+import { PasswordLoginService } from '../src/security/password-login.service.js';
 
 @Controller('response-test')
 class ResponseTestController {
@@ -37,6 +47,13 @@ describe('App bootstrap', () => {
     let app: INestApplication;
     const queryRaw = vi.fn();
     const ping = vi.fn();
+    const assertIpAllowed = vi.fn();
+    const authenticate = vi.fn();
+
+    beforeEach(() => {
+        vi.clearAllMocks();
+        assertIpAllowed.mockResolvedValue(undefined);
+    });
 
     beforeAll(async () => {
         const moduleRef = await Test.createTestingModule({
@@ -47,6 +64,10 @@ describe('App bootstrap', () => {
             .useValue({ $queryRaw: queryRaw })
             .overrideProvider(RedisService)
             .useValue({ ping })
+            .overrideProvider(LoginIpRateLimitService)
+            .useValue({ assertAllowed: assertIpAllowed })
+            .overrideProvider(PasswordLoginService)
+            .useValue({ authenticate })
             .compile();
 
         app = moduleRef.createNestApplication(new FastifyAdapter());
@@ -136,6 +157,81 @@ describe('App bootstrap', () => {
             message: 'invalid input',
             data: null,
         });
+    });
+
+    it('limits login requests by IP and returns the standard success envelope', async () => {
+        assertIpAllowed.mockResolvedValueOnce(undefined);
+        authenticate.mockResolvedValueOnce({
+            accessToken: 'signed-token',
+            user: { id: 'user-1', username: 'zheng', mustChangePassword: false },
+        });
+
+        const response = await app
+            .getHttpAdapter()
+            .getInstance()
+            .inject({
+                method: 'POST',
+                url: '/auth/login',
+                payload: { identifier: 'zheng', password: 'correct-password' },
+            });
+
+        expect(response.statusCode).toBe(200);
+        expect(assertIpAllowed).toHaveBeenCalledWith('127.0.0.1');
+        expect(authenticate).toHaveBeenCalledWith('zheng', 'correct-password');
+        expect(response.json()).toMatchObject({
+            code: 20000,
+            data: { accessToken: 'signed-token' },
+        });
+    });
+
+    it('rejects malformed login requests after applying IP rate limiting', async () => {
+        const response = await app
+            .getHttpAdapter()
+            .getInstance()
+            .inject({
+                method: 'POST',
+                url: '/auth/login',
+                payload: { identifier: '', password: '' },
+            });
+
+        expect(response.statusCode).toBe(400);
+        expect(assertIpAllowed).toHaveBeenCalledWith('127.0.0.1');
+        expect(authenticate).not.toHaveBeenCalled();
+    });
+
+    it('returns the standard unauthorized response for invalid credentials', async () => {
+        authenticate.mockRejectedValueOnce(new UnauthorizedException('Invalid credentials'));
+
+        const response = await app
+            .getHttpAdapter()
+            .getInstance()
+            .inject({
+                method: 'POST',
+                url: '/auth/login',
+                payload: { identifier: 'unknown-user', password: 'incorrect' },
+            });
+
+        expect(response.statusCode).toBe(HttpStatus.UNAUTHORIZED);
+        expect(response.json()).toMatchObject({ code: 40001, message: 'Invalid credentials' });
+    });
+
+    it('preserves the rate-limit status when the IP exceeds its allowance', async () => {
+        assertIpAllowed.mockRejectedValueOnce(
+            new HttpException('Too many login attempts', HttpStatus.TOO_MANY_REQUESTS),
+        );
+
+        const response = await app
+            .getHttpAdapter()
+            .getInstance()
+            .inject({
+                method: 'POST',
+                url: '/auth/login',
+                payload: { identifier: 'zheng', password: 'password' },
+            });
+
+        expect(response.statusCode).toBe(HttpStatus.TOO_MANY_REQUESTS);
+        expect(response.json()).toMatchObject({ code: 40029 });
+        expect(authenticate).not.toHaveBeenCalled();
     });
 
     it('keeps the HTTP status and maps a missing resource to its business code', async () => {
