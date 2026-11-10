@@ -1,4 +1,4 @@
-import { UnauthorizedException } from '@nestjs/common';
+import { BusinessCodeException } from '../src/common/exceptions/business-code.exception.js';
 import { describe, expect, it, vi } from 'vitest';
 import { LoginAttemptProtectionService } from '../src/security/login-attempt-protection.service.js';
 import type { RedisService } from '../src/redis/redis.service.js';
@@ -23,7 +23,7 @@ describe('LoginAttemptProtectionService', () => {
         getValue.mockResolvedValueOnce('1');
 
         await expect(service.assertNotLocked('zheng@example.com')).rejects.toThrow(
-            UnauthorizedException,
+            BusinessCodeException,
         );
     });
 

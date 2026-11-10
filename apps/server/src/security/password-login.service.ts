@@ -1,4 +1,5 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { BusinessCodeException } from '../common/exceptions/business-code.exception.js';
 import { AccessTokenService } from './access-token.service.js';
 import { PasswordHashService } from './password-hash.service.js';
 import { LoginAttemptProtectionService } from './login-attempt-protection.service.js';
@@ -49,7 +50,7 @@ export class PasswordLoginService {
             !(await this.passwordHashService.verifyPassword(user.passwordHash, password))
         ) {
             await this.loginAttemptProtection.recordFailure(identifier);
-            throw new UnauthorizedException('Invalid credentials');
+            throw new BusinessCodeException(401, 40005, 'Invalid credentials');
         }
 
         await this.loginAttemptProtection.clearFailures(identifier);

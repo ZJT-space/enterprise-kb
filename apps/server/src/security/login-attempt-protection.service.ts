@@ -1,5 +1,6 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { createHash } from 'node:crypto';
+import { BusinessCodeException } from '../common/exceptions/business-code.exception.js';
 import { RedisService } from '../redis/redis.service.js';
 
 const MAX_LOGIN_FAILURES = 5;
@@ -14,7 +15,7 @@ export class LoginAttemptProtectionService {
         const { lockKey } = this.getKeys(identifier);
 
         if (await this.redis.getValue(lockKey)) {
-            throw new UnauthorizedException('Invalid credentials');
+            throw new BusinessCodeException(401, 40005, 'Invalid credentials');
         }
     }
 

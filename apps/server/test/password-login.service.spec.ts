@@ -1,4 +1,4 @@
-import { UnauthorizedException } from '@nestjs/common';
+import { BusinessCodeException } from '../src/common/exceptions/business-code.exception.js';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { PasswordLoginService } from '../src/security/password-login.service.js';
 import type { PrismaService } from '../src/prisma/prisma.service.js';
@@ -79,7 +79,7 @@ describe('PasswordLoginService', () => {
         findFirst.mockResolvedValue(null);
 
         await expect(service.authenticate('missing-user', 'password')).rejects.toThrow(
-            UnauthorizedException,
+            BusinessCodeException,
         );
         expect(verifyPassword).not.toHaveBeenCalled();
         expect(recordFailure).toHaveBeenCalledWith('missing-user');
@@ -90,7 +90,7 @@ describe('PasswordLoginService', () => {
         findFirst.mockResolvedValue({ ...user, status: 'disabled' });
 
         await expect(service.authenticate(user.username, 'password')).rejects.toThrow(
-            UnauthorizedException,
+            BusinessCodeException,
         );
         expect(verifyPassword).not.toHaveBeenCalled();
         expect(recordFailure).toHaveBeenCalledWith(user.username);
@@ -101,17 +101,19 @@ describe('PasswordLoginService', () => {
         verifyPassword.mockResolvedValue(false);
 
         await expect(service.authenticate(user.username, 'wrong-password')).rejects.toThrow(
-            UnauthorizedException,
+            BusinessCodeException,
         );
         expect(recordFailure).toHaveBeenCalledWith(user.username);
         expect(issueAccessToken).not.toHaveBeenCalled();
     });
 
     it('does not query credentials when the identifier is locked', async () => {
-        assertNotLocked.mockRejectedValue(new UnauthorizedException('Invalid credentials'));
+        assertNotLocked.mockRejectedValue(
+            new BusinessCodeException(401, 40005, 'Invalid credentials'),
+        );
 
         await expect(service.authenticate(user.username, 'password')).rejects.toThrow(
-            UnauthorizedException,
+            BusinessCodeException,
         );
         expect(findFirst).not.toHaveBeenCalled();
         expect(recordFailure).not.toHaveBeenCalled();

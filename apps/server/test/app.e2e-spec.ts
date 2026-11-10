@@ -16,6 +16,7 @@ import { PrismaService } from '../src/prisma/prisma.service.js';
 import { RedisService } from '../src/redis/redis.service.js';
 import { LoginIpRateLimitService } from '../src/security/login-ip-rate-limit.service.js';
 import { PasswordLoginService } from '../src/security/password-login.service.js';
+import { BusinessCodeException } from '../src/common/exceptions/business-code.exception.js';
 
 @Controller('response-test')
 class ResponseTestController {
@@ -35,6 +36,11 @@ class ExceptionTestController {
     @Get('not-found')
     notFound(): never {
         throw new NotFoundException('resource not found');
+    }
+
+    @Get('unauthorized')
+    unauthorized(): never {
+        throw new UnauthorizedException('Access token expired');
     }
 
     @Get('unexpected')
@@ -200,7 +206,9 @@ describe('App bootstrap', () => {
     });
 
     it('returns the standard unauthorized response for invalid credentials', async () => {
-        authenticate.mockRejectedValueOnce(new UnauthorizedException('Invalid credentials'));
+        authenticate.mockRejectedValueOnce(
+            new BusinessCodeException(401, 40005, 'Invalid credentials'),
+        );
 
         const response = await app
             .getHttpAdapter()
@@ -212,7 +220,17 @@ describe('App bootstrap', () => {
             });
 
         expect(response.statusCode).toBe(HttpStatus.UNAUTHORIZED);
-        expect(response.json()).toMatchObject({ code: 40001, message: 'Invalid credentials' });
+        expect(response.json()).toMatchObject({ code: 40005, message: 'Invalid credentials' });
+    });
+
+    it('keeps token failures on the token-expired business code', async () => {
+        const response = await app.getHttpAdapter().getInstance().inject({
+            method: 'GET',
+            url: '/exception-test/unauthorized',
+        });
+
+        expect(response.statusCode).toBe(HttpStatus.UNAUTHORIZED);
+        expect(response.json()).toMatchObject({ code: 40001 });
     });
 
     it('preserves the rate-limit status when the IP exceeds its allowance', async () => {
