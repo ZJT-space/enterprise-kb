@@ -10,6 +10,7 @@ import { AllExceptionsFilter } from './common/filters/all-exceptions.filter.js';
 import { RedisModule } from './redis/redis.module.js';
 import { PasswordHashModule } from './security/password-hash.module.js';
 import { AccessTokenModule } from './security/access-token.module.js';
+import { PasswordLoginModule } from './security/password-login.module.js';
 
 @Module({
     imports: [
@@ -40,6 +41,7 @@ import { AccessTokenModule } from './security/access-token.module.js';
         RedisModule,
         PasswordHashModule,
         AccessTokenModule,
+        PasswordLoginModule,
         HealthModule,
     ],
     providers: [
