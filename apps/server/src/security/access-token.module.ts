@@ -1,6 +1,7 @@
 import { Global, Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
+import { AccessTokenGuard } from './access-token.guard.js';
 import { AccessTokenService } from './access-token.service.js';
 
 @Global()
@@ -20,7 +21,7 @@ import { AccessTokenService } from './access-token.service.js';
             }),
         }),
     ],
-    providers: [AccessTokenService],
-    exports: [AccessTokenService],
+    providers: [AccessTokenService, AccessTokenGuard],
+    exports: [AccessTokenService, AccessTokenGuard],
 })
 export class AccessTokenModule {}
