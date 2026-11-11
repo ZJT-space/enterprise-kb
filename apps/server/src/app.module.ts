@@ -20,6 +20,7 @@ import { PasswordLoginModule } from './security/password-login.module.js';
             validationSchema: z.object({
                 PORT: z.coerce.number().int().min(1).max(65535).default(3000),
                 ACCESS_TOKEN_SECRET: z.string().min(32),
+                REFRESH_TOKEN_SECRET: z.string().min(32),
                 DATABASE_URL: z
                     .string()
                     .url()
