@@ -8,6 +8,7 @@ import {
     UnauthorizedException,
 } from '@nestjs/common';
 import { FastifyAdapter } from '@nestjs/platform-fastify';
+import fastifyCookie from '@fastify/cookie';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { INestApplication } from '@nestjs/common';
@@ -55,6 +56,7 @@ describe('App bootstrap', () => {
     const ping = vi.fn();
     const assertIpAllowed = vi.fn();
     const authenticate = vi.fn();
+    const refreshAccessToken = vi.fn();
 
     beforeEach(() => {
         vi.clearAllMocks();
@@ -73,10 +75,11 @@ describe('App bootstrap', () => {
             .overrideProvider(LoginIpRateLimitService)
             .useValue({ assertAllowed: assertIpAllowed })
             .overrideProvider(PasswordLoginService)
-            .useValue({ authenticate })
+            .useValue({ authenticate, refreshAccessToken })
             .compile();
 
         app = moduleRef.createNestApplication(new FastifyAdapter());
+        await app.getHttpAdapter().getInstance().register(fastifyCookie);
         await app.init();
         await app.getHttpAdapter().getInstance().ready();
     });
@@ -169,6 +172,7 @@ describe('App bootstrap', () => {
         assertIpAllowed.mockResolvedValueOnce(undefined);
         authenticate.mockResolvedValueOnce({
             accessToken: 'signed-token',
+            refreshToken: 'signed-refresh-token',
             user: { id: 'user-1', username: 'zheng', mustChangePassword: false },
         });
 
@@ -188,6 +192,41 @@ describe('App bootstrap', () => {
             code: 20000,
             data: { accessToken: 'signed-token' },
         });
+        expect(response.json().data).not.toHaveProperty('refreshToken');
+        expect(response.headers['set-cookie']).toContain('refreshToken=signed-refresh-token');
+        expect(response.headers['set-cookie']).toContain('HttpOnly');
+        expect(response.headers['set-cookie']).toContain('Path=/auth');
+    });
+
+    it('uses the refresh cookie to issue a new access token', async () => {
+        refreshAccessToken.mockResolvedValueOnce('renewed-access-token');
+
+        const response = await app
+            .getHttpAdapter()
+            .getInstance()
+            .inject({
+                method: 'POST',
+                url: '/auth/refresh',
+                cookies: { refreshToken: 'signed-refresh-token' },
+            });
+
+        expect(response.statusCode).toBe(200);
+        expect(refreshAccessToken).toHaveBeenCalledWith('signed-refresh-token');
+        expect(response.json()).toMatchObject({
+            code: 20000,
+            data: { accessToken: 'renewed-access-token' },
+        });
+    });
+
+    it('rejects refresh requests without a refresh cookie', async () => {
+        const response = await app.getHttpAdapter().getInstance().inject({
+            method: 'POST',
+            url: '/auth/refresh',
+        });
+
+        expect(response.statusCode).toBe(HttpStatus.UNAUTHORIZED);
+        expect(response.json()).toMatchObject({ code: 40001 });
+        expect(refreshAccessToken).not.toHaveBeenCalled();
     });
 
     it('rejects malformed login requests after applying IP rate limiting', async () => {

@@ -4,9 +4,11 @@ import { AccessTokenService } from './access-token.service.js';
 import { PasswordHashService } from './password-hash.service.js';
 import { LoginAttemptProtectionService } from './login-attempt-protection.service.js';
 import { PrismaService } from '../prisma/prisma.service.js';
+import { RefreshTokenService } from './refresh-token.service.js';
 
 export interface PasswordLoginResult {
     accessToken: string;
+    refreshToken: string;
     user: {
         id: string;
         username: string;
@@ -23,6 +25,7 @@ export class PasswordLoginService {
         private readonly passwordHashService: PasswordHashService,
         private readonly accessTokenService: AccessTokenService,
         private readonly loginAttemptProtection: LoginAttemptProtectionService,
+        private readonly refreshTokenService: RefreshTokenService,
     ) {}
 
     async authenticate(identifier: string, password: string): Promise<PasswordLoginResult> {
@@ -55,9 +58,11 @@ export class PasswordLoginService {
 
         await this.loginAttemptProtection.clearFailures(identifier);
         const accessToken = await this.accessTokenService.issueAccessToken(user.id);
+        const refreshToken = await this.refreshTokenService.issue(user.id);
 
         return {
             accessToken,
+            refreshToken,
             user: {
                 id: user.id,
                 username: user.username,
@@ -66,5 +71,20 @@ export class PasswordLoginService {
                 mustChangePassword: user.mustChangePassword,
             },
         };
+    }
+
+    async refreshAccessToken(token: string): Promise<string> {
+        const claims = await this.refreshTokenService.verify(token);
+        const user = await this.prisma.user.findUnique({
+            where: { id: claims.sub },
+            select: { status: true },
+        });
+
+        // 刷新时重新检查账号状态，停用账号不能继续换取访问令牌。
+        if (!user || user.status !== 'active') {
+            throw new BusinessCodeException(401, 40001, 'Invalid refresh token');
+        }
+
+        return this.accessTokenService.issueAccessToken(claims.sub);
     }
 }

@@ -22,6 +22,6 @@ import { AccessTokenService } from './access-token.service.js';
         }),
     ],
     providers: [AccessTokenService, AccessTokenGuard],
-    exports: [AccessTokenService, AccessTokenGuard],
+    exports: [JwtModule, AccessTokenService, AccessTokenGuard],
 })
 export class AccessTokenModule {}

@@ -5,6 +5,7 @@ import type { PrismaService } from '../src/prisma/prisma.service.js';
 import type { PasswordHashService } from '../src/security/password-hash.service.js';
 import type { AccessTokenService } from '../src/security/access-token.service.js';
 import type { LoginAttemptProtectionService } from '../src/security/login-attempt-protection.service.js';
+import type { RefreshTokenService } from '../src/security/refresh-token.service.js';
 
 describe('PasswordLoginService', () => {
     const user = {
@@ -19,6 +20,7 @@ describe('PasswordLoginService', () => {
     const findFirst = vi.fn();
     const verifyPassword = vi.fn();
     const issueAccessToken = vi.fn();
+    const issueRefreshToken = vi.fn();
     const assertNotLocked = vi.fn();
     const recordFailure = vi.fn();
     const clearFailures = vi.fn();
@@ -31,6 +33,7 @@ describe('PasswordLoginService', () => {
             recordFailure,
             clearFailures,
         } as unknown as LoginAttemptProtectionService,
+        { issue: issueRefreshToken } as unknown as RefreshTokenService,
     );
 
     beforeEach(() => {
@@ -38,6 +41,7 @@ describe('PasswordLoginService', () => {
         findFirst.mockResolvedValue(user);
         verifyPassword.mockResolvedValue(true);
         issueAccessToken.mockResolvedValue('signed-access-token');
+        issueRefreshToken.mockResolvedValue('signed-refresh-token');
         assertNotLocked.mockResolvedValue(undefined);
         recordFailure.mockResolvedValue(1);
         clearFailures.mockResolvedValue(undefined);
@@ -62,8 +66,10 @@ describe('PasswordLoginService', () => {
         expect(assertNotLocked).toHaveBeenCalledWith(user.email);
         expect(clearFailures).toHaveBeenCalledWith(user.email);
         expect(issueAccessToken).toHaveBeenCalledWith(user.id);
+        expect(issueRefreshToken).toHaveBeenCalledWith(user.id);
         expect(result).toEqual({
             accessToken: 'signed-access-token',
+            refreshToken: 'signed-refresh-token',
             user: {
                 id: user.id,
                 username: user.username,
@@ -73,6 +79,38 @@ describe('PasswordLoginService', () => {
             },
         });
         expect(result.user).not.toHaveProperty('passwordHash');
+    });
+
+    it('refreshes an access token for an active account', async () => {
+        const findUnique = vi.fn().mockResolvedValue({ status: 'active' });
+        const verifyRefreshToken = vi.fn().mockResolvedValue({
+            sub: user.id,
+            iat: 1,
+            exp: 2,
+        });
+        const refreshService = new PasswordLoginService(
+            { user: { findFirst, findUnique } } as unknown as PrismaService,
+            { verifyPassword } as unknown as PasswordHashService,
+            { issueAccessToken } as unknown as AccessTokenService,
+            {
+                assertNotLocked,
+                recordFailure,
+                clearFailures,
+            } as unknown as LoginAttemptProtectionService,
+            {
+                issue: issueRefreshToken,
+                verify: verifyRefreshToken,
+            } as unknown as RefreshTokenService,
+        );
+        issueAccessToken.mockResolvedValue('renewed-access-token');
+
+        await expect(refreshService.refreshAccessToken('valid-refresh-token')).resolves.toBe(
+            'renewed-access-token',
+        );
+        expect(findUnique).toHaveBeenCalledWith({
+            where: { id: user.id },
+            select: { status: true },
+        });
     });
 
     it('uses the same unauthorized response when the account does not exist', async () => {

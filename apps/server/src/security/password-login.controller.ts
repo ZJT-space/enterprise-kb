@@ -6,9 +6,12 @@ import {
     HttpStatus,
     Post,
     Req,
+    Res,
 } from '@nestjs/common';
-import type { FastifyRequest } from 'fastify';
+import { ConfigService } from '@nestjs/config';
+import type { FastifyReply, FastifyRequest } from 'fastify';
 import { z } from 'zod';
+import { BusinessCodeException } from '../common/exceptions/business-code.exception.js';
 import { LoginIpRateLimitService } from './login-ip-rate-limit.service.js';
 import { PasswordLoginService } from './password-login.service.js';
 
@@ -24,11 +27,16 @@ export class PasswordLoginController {
     constructor(
         private readonly loginIpRateLimit: LoginIpRateLimitService,
         private readonly passwordLogin: PasswordLoginService,
+        private readonly configService: ConfigService,
     ) {}
 
     @HttpCode(HttpStatus.OK)
     @Post('login')
-    async login(@Req() request: FastifyRequest, @Body() body: unknown) {
+    async login(
+        @Req() request: FastifyRequest,
+        @Res({ passthrough: true }) reply: FastifyReply,
+        @Body() body: unknown,
+    ) {
         // 每个登录请求先计入 IP 窗口，包括格式错误的请求，避免借参数错误绕过限流。
         await this.loginIpRateLimit.assertAllowed(request.ip);
 
@@ -38,9 +46,36 @@ export class PasswordLoginController {
             throw new BadRequestException('Invalid login request');
         }
 
-        return this.passwordLogin.authenticate(
+        const result = await this.passwordLogin.authenticate(
             parsedBody.data.identifier,
             parsedBody.data.password,
         );
+
+        // Refresh Token 仅通过 HttpOnly Cookie 传递，避免暴露给前端脚本。
+        reply.setCookie('refreshToken', result.refreshToken, {
+            httpOnly: true,
+            secure: this.configService.get<string>('NODE_ENV') === 'production',
+            sameSite: 'lax',
+            path: '/auth',
+            maxAge: 7 * 24 * 60 * 60,
+        });
+
+        return {
+            accessToken: result.accessToken,
+            user: result.user,
+        };
+    }
+
+    @HttpCode(HttpStatus.OK)
+    @Post('refresh')
+    async refresh(@Req() request: FastifyRequest) {
+        const token = request.cookies?.refreshToken;
+
+        if (!token) {
+            // 缺少 Cookie 与无效或过期令牌使用相同业务码。
+            throw new BusinessCodeException(401, 40001, 'Invalid refresh token');
+        }
+
+        return { accessToken: await this.passwordLogin.refreshAccessToken(token) };
     }
 }
