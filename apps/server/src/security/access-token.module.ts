@@ -1,9 +1,9 @@
 import { Global, Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
-import { AccessTokenGuard } from './access-token.guard.js';
-import { AccessTokenService } from './access-token.service.js';
-import { SessionVersionService } from './session-version.service.js';
+import { AccessTokenGuard } from '@/security/access-token.guard.js';
+import { AccessTokenService } from '@/security/access-token.service.js';
+import { SessionVersionService } from '@/security/session-version.service.js';
 
 @Global()
 @Module({

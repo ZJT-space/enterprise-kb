@@ -1,6 +1,6 @@
 import { Injectable, ServiceUnavailableException } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
-import { RedisService } from '../redis/redis.service.js';
+import { RedisService } from '@/redis/redis.service.js';
 
 const SESSION_VERSION_KEY_PREFIX = 'auth:session-version:';
 

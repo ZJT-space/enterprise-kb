@@ -1,7 +1,7 @@
 import { Catch, HttpException, HttpStatus, Logger } from '@nestjs/common';
 import type { ArgumentsHost, ExceptionFilter } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
-import { BusinessCodeException } from '../exceptions/business-code.exception.js';
+import { BusinessCodeException } from '@/common/exceptions/business-code.exception.js';
 
 const BUSINESS_CODE_BY_STATUS: Record<number, number> = {
     [HttpStatus.BAD_REQUEST]: 40000,

@@ -1,12 +1,12 @@
-import { BusinessCodeException } from '../src/common/exceptions/business-code.exception.js';
+import { BusinessCodeException } from '@/common/exceptions/business-code.exception.js';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { PasswordLoginService } from '../src/security/password-login.service.js';
-import type { PrismaService } from '../src/prisma/prisma.service.js';
-import type { PasswordHashService } from '../src/security/password-hash.service.js';
-import type { AccessTokenService } from '../src/security/access-token.service.js';
-import type { LoginAttemptProtectionService } from '../src/security/login-attempt-protection.service.js';
-import type { RefreshTokenService } from '../src/security/refresh-token.service.js';
-import type { SessionVersionService } from '../src/security/session-version.service.js';
+import { PasswordLoginService } from '@/security/password-login.service.js';
+import type { PrismaService } from '@/prisma/prisma.service.js';
+import type { PasswordHashService } from '@/security/password-hash.service.js';
+import type { AccessTokenService } from '@/security/access-token.service.js';
+import type { LoginAttemptProtectionService } from '@/security/login-attempt-protection.service.js';
+import type { RefreshTokenService } from '@/security/refresh-token.service.js';
+import type { SessionVersionService } from '@/security/session-version.service.js';
 
 describe('PasswordLoginService', () => {
     const user = {

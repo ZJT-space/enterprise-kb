@@ -1,7 +1,7 @@
 import { HttpStatus } from '@nestjs/common';
 import { describe, expect, it, vi } from 'vitest';
-import { LoginIpRateLimitService } from '../src/security/login-ip-rate-limit.service.js';
-import type { RedisService } from '../src/redis/redis.service.js';
+import { LoginIpRateLimitService } from '@/security/login-ip-rate-limit.service.js';
+import type { RedisService } from '@/redis/redis.service.js';
 
 describe('LoginIpRateLimitService', () => {
     const consumeSlidingWindowRequest = vi.fn();

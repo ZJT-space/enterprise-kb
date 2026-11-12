@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PasswordHashService } from '../src/security/password-hash.service.js';
+import { PasswordHashService } from '@/security/password-hash.service.js';
 
 describe('PasswordHashService', () => {
     const passwordHashService = new PasswordHashService();

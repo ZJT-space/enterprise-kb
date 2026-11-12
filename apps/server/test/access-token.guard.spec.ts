@@ -1,10 +1,10 @@
 import type { ExecutionContext } from '@nestjs/common';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { BusinessCodeException } from '../src/common/exceptions/business-code.exception.js';
-import { AccessTokenGuard } from '../src/security/access-token.guard.js';
-import type { AuthenticatedRequest } from '../src/security/authenticated-request.js';
-import type { AccessTokenService } from '../src/security/access-token.service.js';
-import type { SessionVersionService } from '../src/security/session-version.service.js';
+import { BusinessCodeException } from '@/common/exceptions/business-code.exception.js';
+import { AccessTokenGuard } from '@/security/access-token.guard.js';
+import type { AuthenticatedRequest } from '@/security/authenticated-request.js';
+import type { AccessTokenService } from '@/security/access-token.service.js';
+import type { SessionVersionService } from '@/security/session-version.service.js';
 
 describe('AccessTokenGuard', () => {
     const claims = {
