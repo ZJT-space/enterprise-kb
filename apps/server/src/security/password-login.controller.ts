@@ -2,11 +2,13 @@ import {
     BadRequestException,
     Body,
     Controller,
+    Get,
     HttpCode,
     HttpStatus,
     Post,
     Req,
     Res,
+    UseGuards,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import type { FastifyReply, FastifyRequest } from 'fastify';
@@ -14,6 +16,8 @@ import { z } from 'zod';
 import { BusinessCodeException } from '@/common/exceptions/business-code.exception.js';
 import { LoginIpRateLimitService } from '@/security/login-ip-rate-limit.service.js';
 import { PasswordLoginService } from '@/security/password-login.service.js';
+import { AccessTokenGuard } from '@/security/access-token.guard.js';
+import type { AuthenticatedRequest } from '@/security/authenticated-request.js';
 
 const loginRequestSchema = z
     .object({
@@ -29,6 +33,14 @@ export class PasswordLoginController {
         private readonly passwordLogin: PasswordLoginService,
         private readonly configService: ConfigService,
     ) {}
+
+    @HttpCode(HttpStatus.OK)
+    @UseGuards(AccessTokenGuard)
+    @Get('me')
+    async getCurrentUser(@Req() request: AuthenticatedRequest) {
+        // 用守卫验证后的用户主体查询资料，不接受客户端传入用户 ID。
+        return { user: await this.passwordLogin.getCurrentUser(request.user.sub) };
+    }
 
     @HttpCode(HttpStatus.OK)
     @Post('login')

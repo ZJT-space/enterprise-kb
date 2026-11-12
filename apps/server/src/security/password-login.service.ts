@@ -93,6 +93,33 @@ export class PasswordLoginService {
         return this.accessTokenService.issueAccessToken(claims.sub, claims.sessionVersion);
     }
 
+    async getCurrentUser(userId: string): Promise<PasswordLoginResult['user']> {
+        const user = await this.prisma.user.findUnique({
+            where: { id: userId },
+            select: {
+                id: true,
+                username: true,
+                email: true,
+                nickname: true,
+                mustChangePassword: true,
+                status: true,
+            },
+        });
+
+        // 每次读取当前用户时重新检查账号状态，停用或删除账号不能继续使用旧令牌。
+        if (!user || user.status !== 'active') {
+            throw new BusinessCodeException(401, 40001, 'Invalid access token');
+        }
+
+        return {
+            id: user.id,
+            username: user.username,
+            email: user.email,
+            nickname: user.nickname,
+            mustChangePassword: user.mustChangePassword,
+        };
+    }
+
     async logout(refreshToken: string | undefined): Promise<void> {
         if (!refreshToken) {
             return;
