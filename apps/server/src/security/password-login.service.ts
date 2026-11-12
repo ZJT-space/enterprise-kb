@@ -5,6 +5,8 @@ import { PasswordHashService } from './password-hash.service.js';
 import { LoginAttemptProtectionService } from './login-attempt-protection.service.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { RefreshTokenService } from './refresh-token.service.js';
+import type { RefreshTokenClaims } from './refresh-token.service.js';
+import { SessionVersionService } from './session-version.service.js';
 
 export interface PasswordLoginResult {
     accessToken: string;
@@ -26,6 +28,7 @@ export class PasswordLoginService {
         private readonly accessTokenService: AccessTokenService,
         private readonly loginAttemptProtection: LoginAttemptProtectionService,
         private readonly refreshTokenService: RefreshTokenService,
+        private readonly sessionVersionService: SessionVersionService,
     ) {}
 
     async authenticate(identifier: string, password: string): Promise<PasswordLoginResult> {
@@ -57,8 +60,9 @@ export class PasswordLoginService {
         }
 
         await this.loginAttemptProtection.clearFailures(identifier);
-        const accessToken = await this.accessTokenService.issueAccessToken(user.id);
-        const refreshToken = await this.refreshTokenService.issue(user.id);
+        const sessionVersion = await this.sessionVersionService.getOrCreate(user.id);
+        const accessToken = await this.accessTokenService.issueAccessToken(user.id, sessionVersion);
+        const refreshToken = await this.refreshTokenService.issue(user.id, sessionVersion);
 
         return {
             accessToken,
@@ -75,16 +79,44 @@ export class PasswordLoginService {
 
     async refreshAccessToken(token: string): Promise<string> {
         const claims = await this.refreshTokenService.verify(token);
+        const currentVersion = await this.sessionVersionService.getCurrent(claims.sub);
         const user = await this.prisma.user.findUnique({
             where: { id: claims.sub },
             select: { status: true },
         });
 
         // 刷新时重新检查账号状态，停用账号不能继续换取访问令牌。
-        if (!user || user.status !== 'active') {
+        if (!user || user.status !== 'active' || currentVersion !== claims.sessionVersion) {
             throw new BusinessCodeException(401, 40001, 'Invalid refresh token');
         }
 
-        return this.accessTokenService.issueAccessToken(claims.sub);
+        return this.accessTokenService.issueAccessToken(claims.sub, claims.sessionVersion);
+    }
+
+    async logout(refreshToken: string | undefined): Promise<void> {
+        if (!refreshToken) {
+            return;
+        }
+
+        let claims: RefreshTokenClaims;
+
+        try {
+            claims = await this.refreshTokenService.verify(refreshToken);
+        } catch (error) {
+            if (error instanceof BusinessCodeException && error.businessCode === 40001) {
+                // 无效或过期令牌无法代表仍有效的会话，登出仍按幂等操作处理。
+                return;
+            }
+
+            throw error;
+        }
+
+        const currentVersion = await this.sessionVersionService.getCurrent(claims.sub);
+
+        if (currentVersion !== claims.sessionVersion) {
+            return;
+        }
+
+        await this.sessionVersionService.revokeAll(claims.sub);
     }
 }

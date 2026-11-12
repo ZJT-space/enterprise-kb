@@ -6,6 +6,7 @@ import type { PasswordHashService } from '../src/security/password-hash.service.
 import type { AccessTokenService } from '../src/security/access-token.service.js';
 import type { LoginAttemptProtectionService } from '../src/security/login-attempt-protection.service.js';
 import type { RefreshTokenService } from '../src/security/refresh-token.service.js';
+import type { SessionVersionService } from '../src/security/session-version.service.js';
 
 describe('PasswordLoginService', () => {
     const user = {
@@ -24,6 +25,7 @@ describe('PasswordLoginService', () => {
     const assertNotLocked = vi.fn();
     const recordFailure = vi.fn();
     const clearFailures = vi.fn();
+    const getOrCreateSessionVersion = vi.fn();
     const service = new PasswordLoginService(
         { user: { findFirst } } as unknown as PrismaService,
         { verifyPassword } as unknown as PasswordHashService,
@@ -34,6 +36,7 @@ describe('PasswordLoginService', () => {
             clearFailures,
         } as unknown as LoginAttemptProtectionService,
         { issue: issueRefreshToken } as unknown as RefreshTokenService,
+        { getOrCreate: getOrCreateSessionVersion } as unknown as SessionVersionService,
     );
 
     beforeEach(() => {
@@ -42,6 +45,7 @@ describe('PasswordLoginService', () => {
         verifyPassword.mockResolvedValue(true);
         issueAccessToken.mockResolvedValue('signed-access-token');
         issueRefreshToken.mockResolvedValue('signed-refresh-token');
+        getOrCreateSessionVersion.mockResolvedValue('session-version-1');
         assertNotLocked.mockResolvedValue(undefined);
         recordFailure.mockResolvedValue(1);
         clearFailures.mockResolvedValue(undefined);
@@ -65,8 +69,8 @@ describe('PasswordLoginService', () => {
         expect(verifyPassword).toHaveBeenCalledWith(user.passwordHash, 'correct-password');
         expect(assertNotLocked).toHaveBeenCalledWith(user.email);
         expect(clearFailures).toHaveBeenCalledWith(user.email);
-        expect(issueAccessToken).toHaveBeenCalledWith(user.id);
-        expect(issueRefreshToken).toHaveBeenCalledWith(user.id);
+        expect(issueAccessToken).toHaveBeenCalledWith(user.id, 'session-version-1');
+        expect(issueRefreshToken).toHaveBeenCalledWith(user.id, 'session-version-1');
         expect(result).toEqual({
             accessToken: 'signed-access-token',
             refreshToken: 'signed-refresh-token',
@@ -85,6 +89,7 @@ describe('PasswordLoginService', () => {
         const findUnique = vi.fn().mockResolvedValue({ status: 'active' });
         const verifyRefreshToken = vi.fn().mockResolvedValue({
             sub: user.id,
+            sessionVersion: 'session-version-1',
             iat: 1,
             exp: 2,
         });
@@ -101,6 +106,9 @@ describe('PasswordLoginService', () => {
                 issue: issueRefreshToken,
                 verify: verifyRefreshToken,
             } as unknown as RefreshTokenService,
+            {
+                getCurrent: vi.fn().mockResolvedValue('session-version-1'),
+            } as unknown as SessionVersionService,
         );
         issueAccessToken.mockResolvedValue('renewed-access-token');
 

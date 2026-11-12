@@ -78,4 +78,22 @@ export class PasswordLoginController {
 
         return { accessToken: await this.passwordLogin.refreshAccessToken(token) };
     }
+
+    @HttpCode(HttpStatus.OK)
+    @Post('logout')
+    async logout(@Req() request: FastifyRequest, @Res({ passthrough: true }) reply: FastifyReply) {
+        try {
+            await this.passwordLogin.logout(request.cookies?.refreshToken);
+        } finally {
+            // Cookie 与登录时使用相同的 Path 和安全属性，确保浏览器能正确清除。
+            reply.clearCookie('refreshToken', {
+                httpOnly: true,
+                secure: this.configService.get<string>('NODE_ENV') === 'production',
+                sameSite: 'lax',
+                path: '/auth',
+            });
+        }
+
+        return { loggedOut: true };
+    }
 }

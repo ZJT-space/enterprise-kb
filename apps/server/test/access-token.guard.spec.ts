@@ -4,14 +4,25 @@ import { BusinessCodeException } from '../src/common/exceptions/business-code.ex
 import { AccessTokenGuard } from '../src/security/access-token.guard.js';
 import type { AuthenticatedRequest } from '../src/security/authenticated-request.js';
 import type { AccessTokenService } from '../src/security/access-token.service.js';
+import type { SessionVersionService } from '../src/security/session-version.service.js';
 
 describe('AccessTokenGuard', () => {
-    const claims = { sub: 'user-123', iat: 1_800_000_000, exp: 1_800_000_900 };
+    const claims = {
+        sub: 'user-123',
+        sessionVersion: 'session-version-1',
+        iat: 1_800_000_000,
+        exp: 1_800_000_900,
+    };
     const verifyAccessToken = vi.fn();
-    const guard = new AccessTokenGuard({ verifyAccessToken } as unknown as AccessTokenService);
+    const getCurrent = vi.fn();
+    const guard = new AccessTokenGuard(
+        { verifyAccessToken } as unknown as AccessTokenService,
+        { getCurrent } as unknown as SessionVersionService,
+    );
 
     beforeEach(() => {
         vi.clearAllMocks();
+        getCurrent.mockResolvedValue('session-version-1');
     });
 
     function createContext(authorization?: string): {
