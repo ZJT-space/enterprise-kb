@@ -1,6 +1,6 @@
 import { JwtService } from '@nestjs/jwt';
 import { describe, expect, it } from 'vitest';
-import { AccessTokenService } from '../src/security/access-token.service.js';
+import { AccessTokenService } from '@/security/access-token.service.js';
 
 describe('AccessTokenService', () => {
     const jwtService = new JwtService({

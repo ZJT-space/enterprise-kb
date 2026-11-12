@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { BusinessCodeException } from '../common/exceptions/business-code.exception.js';
+import { BusinessCodeException } from '@/common/exceptions/business-code.exception.js';
 
 export interface RefreshTokenClaims {
     sub: string;

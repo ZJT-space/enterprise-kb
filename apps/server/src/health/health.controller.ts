@@ -1,7 +1,7 @@
 import { Controller, Get, ServiceUnavailableException } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service.js';
-import { BypassTransform } from '../common/decorators/bypass-transform.decorator.js';
-import { RedisService } from '../redis/redis.service.js';
+import { PrismaService } from '@/prisma/prisma.service.js';
+import { BypassTransform } from '@/common/decorators/bypass-transform.decorator.js';
+import { RedisService } from '@/redis/redis.service.js';
 
 @Controller('health')
 export class HealthController {

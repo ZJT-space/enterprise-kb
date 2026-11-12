@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { createHash, randomUUID } from 'node:crypto';
-import { RedisService } from '../redis/redis.service.js';
+import { RedisService } from '@/redis/redis.service.js';
 
 const MAX_LOGIN_REQUESTS_PER_IP = 30;
 const LOGIN_WINDOW_MILLISECONDS = 60 * 1000;

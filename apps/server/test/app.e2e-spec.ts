@@ -12,12 +12,12 @@ import fastifyCookie from '@fastify/cookie';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { INestApplication } from '@nestjs/common';
-import { AppModule } from '../src/app.module.js';
-import { PrismaService } from '../src/prisma/prisma.service.js';
-import { RedisService } from '../src/redis/redis.service.js';
-import { LoginIpRateLimitService } from '../src/security/login-ip-rate-limit.service.js';
-import { PasswordLoginService } from '../src/security/password-login.service.js';
-import { BusinessCodeException } from '../src/common/exceptions/business-code.exception.js';
+import { AppModule } from '@/app.module.js';
+import { PrismaService } from '@/prisma/prisma.service.js';
+import { RedisService } from '@/redis/redis.service.js';
+import { LoginIpRateLimitService } from '@/security/login-ip-rate-limit.service.js';
+import { PasswordLoginService } from '@/security/password-login.service.js';
+import { BusinessCodeException } from '@/common/exceptions/business-code.exception.js';
 
 @Controller('response-test')
 class ResponseTestController {

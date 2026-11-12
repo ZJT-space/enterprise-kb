@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { createHash } from 'node:crypto';
-import { BusinessCodeException } from '../common/exceptions/business-code.exception.js';
-import { RedisService } from '../redis/redis.service.js';
+import { BusinessCodeException } from '@/common/exceptions/business-code.exception.js';
+import { RedisService } from '@/redis/redis.service.js';
 
 const MAX_LOGIN_FAILURES = 5;
 const FAILURE_WINDOW_SECONDS = 15 * 60;

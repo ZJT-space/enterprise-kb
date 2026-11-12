@@ -1,7 +1,7 @@
-import { BusinessCodeException } from '../src/common/exceptions/business-code.exception.js';
+import { BusinessCodeException } from '@/common/exceptions/business-code.exception.js';
 import { describe, expect, it, vi } from 'vitest';
-import { LoginAttemptProtectionService } from '../src/security/login-attempt-protection.service.js';
-import type { RedisService } from '../src/redis/redis.service.js';
+import { LoginAttemptProtectionService } from '@/security/login-attempt-protection.service.js';
+import type { RedisService } from '@/redis/redis.service.js';
 
 describe('LoginAttemptProtectionService', () => {
     const getValue = vi.fn();

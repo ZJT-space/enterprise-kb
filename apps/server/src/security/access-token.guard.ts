@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import type { CanActivate, ExecutionContext } from '@nestjs/common';
-import { BusinessCodeException } from '../common/exceptions/business-code.exception.js';
-import { AccessTokenService } from './access-token.service.js';
-import type { AuthenticatedRequest } from './authenticated-request.js';
-import { SessionVersionService } from './session-version.service.js';
+import { BusinessCodeException } from '@/common/exceptions/business-code.exception.js';
+import { AccessTokenService } from '@/security/access-token.service.js';
+import type { AuthenticatedRequest } from '@/security/authenticated-request.js';
+import { SessionVersionService } from '@/security/session-version.service.js';
 
 @Injectable()
 export class AccessTokenGuard implements CanActivate {

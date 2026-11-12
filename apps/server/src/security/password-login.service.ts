@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { BusinessCodeException } from '../common/exceptions/business-code.exception.js';
-import { AccessTokenService } from './access-token.service.js';
-import { PasswordHashService } from './password-hash.service.js';
-import { LoginAttemptProtectionService } from './login-attempt-protection.service.js';
-import { PrismaService } from '../prisma/prisma.service.js';
-import { RefreshTokenService } from './refresh-token.service.js';
-import type { RefreshTokenClaims } from './refresh-token.service.js';
-import { SessionVersionService } from './session-version.service.js';
+import { BusinessCodeException } from '@/common/exceptions/business-code.exception.js';
+import { AccessTokenService } from '@/security/access-token.service.js';
+import { PasswordHashService } from '@/security/password-hash.service.js';
+import { LoginAttemptProtectionService } from '@/security/login-attempt-protection.service.js';
+import { PrismaService } from '@/prisma/prisma.service.js';
+import { RefreshTokenService } from '@/security/refresh-token.service.js';
+import type { RefreshTokenClaims } from '@/security/refresh-token.service.js';
+import { SessionVersionService } from '@/security/session-version.service.js';
 
 export interface PasswordLoginResult {
     accessToken: string;

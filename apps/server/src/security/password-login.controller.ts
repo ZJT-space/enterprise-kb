@@ -11,9 +11,9 @@ import {
 import { ConfigService } from '@nestjs/config';
 import type { FastifyReply, FastifyRequest } from 'fastify';
 import { z } from 'zod';
-import { BusinessCodeException } from '../common/exceptions/business-code.exception.js';
-import { LoginIpRateLimitService } from './login-ip-rate-limit.service.js';
-import { PasswordLoginService } from './password-login.service.js';
+import { BusinessCodeException } from '@/common/exceptions/business-code.exception.js';
+import { LoginIpRateLimitService } from '@/security/login-ip-rate-limit.service.js';
+import { PasswordLoginService } from '@/security/password-login.service.js';
 
 const loginRequestSchema = z
     .object({
