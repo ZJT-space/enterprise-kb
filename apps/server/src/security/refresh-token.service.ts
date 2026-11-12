@@ -5,6 +5,7 @@ import { BusinessCodeException } from '../common/exceptions/business-code.except
 
 export interface RefreshTokenClaims {
     sub: string;
+    sessionVersion: string;
     iat: number;
     exp: number;
 }
@@ -20,9 +21,9 @@ export class RefreshTokenService {
         this.secret = configService.getOrThrow<string>('REFRESH_TOKEN_SECRET');
     }
 
-    async issue(subject: string): Promise<string> {
+    async issue(subject: string, sessionVersion: string): Promise<string> {
         return this.jwtService.signAsync(
-            {},
+            { sessionVersion },
             {
                 secret: this.secret,
                 algorithm: 'HS256',
@@ -41,6 +42,8 @@ export class RefreshTokenService {
 
             if (
                 typeof payload.sub !== 'string' ||
+                typeof payload.sessionVersion !== 'string' ||
+                payload.sessionVersion.length === 0 ||
                 typeof payload.iat !== 'number' ||
                 typeof payload.exp !== 'number'
             ) {
@@ -49,6 +52,7 @@ export class RefreshTokenService {
 
             return {
                 sub: payload.sub,
+                sessionVersion: payload.sessionVersion,
                 iat: payload.iat,
                 exp: payload.exp,
             };

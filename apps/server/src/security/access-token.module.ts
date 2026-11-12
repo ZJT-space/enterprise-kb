@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { AccessTokenGuard } from './access-token.guard.js';
 import { AccessTokenService } from './access-token.service.js';
+import { SessionVersionService } from './session-version.service.js';
 
 @Global()
 @Module({
@@ -21,7 +22,7 @@ import { AccessTokenService } from './access-token.service.js';
             }),
         }),
     ],
-    providers: [AccessTokenService, AccessTokenGuard],
-    exports: [JwtModule, AccessTokenService, AccessTokenGuard],
+    providers: [AccessTokenService, AccessTokenGuard, SessionVersionService],
+    exports: [JwtModule, AccessTokenService, AccessTokenGuard, SessionVersionService],
 })
 export class AccessTokenModule {}

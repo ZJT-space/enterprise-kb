@@ -11,10 +11,11 @@ describe('AccessTokenService', () => {
     const accessTokenService = new AccessTokenService(jwtService);
 
     it('issues and verifies a short-lived token for a subject', async () => {
-        const token = await accessTokenService.issueAccessToken('user-123');
+        const token = await accessTokenService.issueAccessToken('user-123', 'session-version-1');
         const claims = await accessTokenService.verifyAccessToken(token);
 
         expect(claims.sub).toBe('user-123');
+        expect(claims.sessionVersion).toBe('session-version-1');
         expect(claims.exp - claims.iat).toBe(15 * 60);
     });
 
