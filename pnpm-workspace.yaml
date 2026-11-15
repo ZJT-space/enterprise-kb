@@ -2,6 +2,8 @@ packages:
     - 'apps/*'
     - 'packages/*'
 allowBuilds:
+    # core-js 安装脚本只输出提示信息，依赖使用无需执行该脚本。
+    core-js: false
     '@prisma/engines': true
     argon2: true
     prisma: true

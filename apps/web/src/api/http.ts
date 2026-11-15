@@ -45,6 +45,12 @@ apiClient.interceptors.response.use(
         const businessCode = error.response?.data?.code;
         const requestPath = originalRequest?.url?.split('?')[0] ?? '';
 
+        if (businessCode === 40002) {
+            // 服务端要求强制改密时，通知应用切换到改密路由。
+            window.dispatchEvent(new Event('auth:password-change-required'));
+            return Promise.reject(error);
+        }
+
         if (
             !originalRequest ||
             businessCode !== 40001 ||

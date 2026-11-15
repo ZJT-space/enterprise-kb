@@ -88,6 +88,12 @@ export const useAuthStore = defineStore('auth', () => {
         }
     }
 
+    function requirePasswordChange(): void {
+        if (user.value) {
+            user.value.mustChangePassword = true;
+        }
+    }
+
     return {
         accessToken,
         user,
@@ -96,5 +102,6 @@ export const useAuthStore = defineStore('auth', () => {
         restoreSession,
         login,
         logout,
+        requirePasswordChange,
     };
 });
