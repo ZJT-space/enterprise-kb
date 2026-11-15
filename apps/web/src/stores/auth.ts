@@ -30,6 +30,7 @@ export const useAuthStore = defineStore('auth', () => {
     const user = ref<AuthUser | null>(null);
     const status = ref<AuthStatus>('initializing');
     const isAuthenticated = computed(() => status.value === 'authenticated');
+    let restorePromise: Promise<void> | null = null;
 
     // 请求刷新失败并清空 Access Token 时，同步清除前端登录状态。
     watch(accessToken, (token) => {
@@ -39,22 +40,31 @@ export const useAuthStore = defineStore('auth', () => {
         }
     });
 
-    async function restoreSession(): Promise<void> {
-        status.value = 'initializing';
-
-        try {
-            // 先用 HttpOnly Cookie 换取 Access Token，再请求当前用户资料。
-            const refreshed = await postApiData<RefreshResponse>('/auth/refresh');
-            accessToken.value = refreshed.accessToken;
-
-            const currentUser = await getApiData<CurrentUserResponse>('/auth/me');
-            user.value = currentUser.user;
-            status.value = 'authenticated';
-        } catch {
-            accessToken.value = null;
-            user.value = null;
-            status.value = 'anonymous';
+    function restoreSession(): Promise<void> {
+        if (restorePromise) {
+            return restorePromise;
         }
+
+        status.value = 'initializing';
+        restorePromise = (async () => {
+            try {
+                // 先用 HttpOnly Cookie 换取 Access Token，再请求当前用户资料。
+                const refreshed = await postApiData<RefreshResponse>('/auth/refresh');
+                accessToken.value = refreshed.accessToken;
+
+                const currentUser = await getApiData<CurrentUserResponse>('/auth/me');
+                user.value = currentUser.user;
+                status.value = 'authenticated';
+            } catch {
+                accessToken.value = null;
+                user.value = null;
+                status.value = 'anonymous';
+            } finally {
+                restorePromise = null;
+            }
+        })();
+
+        return restorePromise;
     }
 
     async function login(identifier: string, password: string): Promise<void> {

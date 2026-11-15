@@ -1,8 +1,14 @@
+<script setup lang="ts">
+import { useAuthStore } from '@/stores/auth';
+
+const authStore = useAuthStore();
+</script>
+
 <template>
-    <main class="app-shell">
-        <h1>企业知识库</h1>
-        <p>前端应用骨架已就绪。</p>
+    <main v-if="authStore.status === 'initializing'" class="app-status" role="status">
+        正在恢复登录状态…
     </main>
+    <RouterView v-else />
 </template>
 
 <style>
@@ -20,16 +26,9 @@ body {
     margin: 0;
 }
 
-.app-shell {
+.app-status {
     display: grid;
     min-height: 100vh;
-    align-content: center;
-    justify-items: center;
-    gap: 0.5rem;
-}
-
-h1,
-p {
-    margin: 0;
+    place-items: center;
 }
 </style>
