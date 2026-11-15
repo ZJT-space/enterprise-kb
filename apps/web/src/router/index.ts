@@ -21,6 +21,12 @@ const routes: RouteRecordRaw[] = [
         meta: { requiresAuth: true },
     },
     {
+        path: '/change-password',
+        name: 'change-password',
+        component: () => import('@/views/auth/ChangePasswordPlaceholderView.vue'),
+        meta: { requiresAuth: true },
+    },
+    {
         path: '/:pathMatch(.*)*',
         redirect: { name: 'home' },
     },
@@ -45,6 +51,14 @@ export function createAppRouter(pinia: Pinia) {
                 name: 'login',
                 query: { redirect: to.fullPath },
             };
+        }
+
+        if (authStore.user?.mustChangePassword && to.name !== 'change-password') {
+            return { name: 'change-password' };
+        }
+
+        if (to.name === 'change-password' && !authStore.user?.mustChangePassword) {
+            return { name: 'home' };
         }
 
         if (to.meta.guestOnly && authStore.isAuthenticated) {
